@@ -360,7 +360,7 @@ html.standalone main { padding-bottom: calc(150px + env(safe-area-inset-bottom))
     </ol>
     <button type="button" class="reset" id="installHide">Hide this</button>
   </details>
-  <p class="version" id="version">v4.1</p>
+  <p class="version" id="version">v4.2</p>
 </main>
 
 <div class="bar">
@@ -391,7 +391,15 @@ html.standalone main { padding-bottom: calc(150px + env(safe-area-inset-bottom))
       (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
     var isAndroid = /Android/i.test(ua);
     var standalone = document.documentElement.classList.contains("standalone");
-    if (hidden || standalone || (!isIos && !isAndroid)) return;
+    // Opened from the home screen: leave a note. On Android the browser shares this
+    // storage, so the box stays hidden there too. (iOS keeps home-screen storage separate.)
+    var INSTALLED_KEY = "jamboree-installed";
+    var installed = false;
+    try {
+      if (standalone) localStorage.setItem(INSTALLED_KEY, "1");
+      installed = localStorage.getItem(INSTALLED_KEY) === "1";
+    } catch (e) {}
+    if (hidden || standalone || installed || (!isIos && !isAndroid)) return;
     document.getElementById(isIos ? "stepsIos" : "stepsAndroid").classList.remove("hidden");
     box.classList.remove("hidden");
     document.getElementById("installHide").addEventListener("click", function () {
