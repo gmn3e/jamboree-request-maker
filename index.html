@@ -280,6 +280,10 @@ html.sheet-open { overflow: hidden; }
 .install-steps { margin: 4px 0 0; padding-left: 1.3em; display: grid; gap: 8px; }
 .install-steps li { padding-left: 2px; }
 .glyph { width: 1.05em; height: 1.05em; vertical-align: -0.15em; color: var(--pop); }
+.legal { display: grid; gap: 6px; margin-top: 8px; padding: 0 4px; text-align: center; }
+.legal p { margin: 0; color: var(--muted); font-size: 0.75rem; line-height: 1.45; text-wrap: balance; }
+.legal a { color: var(--muted); text-decoration: underline; }
+.legal a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 2px; }
 .version { color: var(--muted); font-size: 0.75rem; text-align: center; margin: 0; opacity: .7; }
 .bar-inner { max-width: 560px; margin: 0 auto; display: flex; gap: 10px; }
 .btn {
@@ -564,7 +568,11 @@ header p { color: rgba(255,255,255,.88); }
     </ol>
     <button type="button" class="reset" id="installHide">Hide this</button>
   </details>
-  <p class="version" id="version">v6.2</p>
+  <footer class="legal">
+    <p>Fan-made tool, not affiliated with or endorsed by Nintendo. Super Mario Party Jamboree and character names are trademarks of Nintendo.</p>
+    <p>No tracking or cookies. Your settings and presets stay on your device. Hosted on GitHub Pages, which keeps standard server logs (<a href="https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement" rel="noopener">GitHub privacy statement</a>).</p>
+  </footer>
+  <p class="version" id="version">v6.3</p>
 </main>
 
 <div class="bar">
