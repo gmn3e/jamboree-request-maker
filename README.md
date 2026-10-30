@@ -11,7 +11,7 @@ Looking for 2, Luigi & Bowser Taken
 Mall
 15 Turns
 Bonus On
-Help Off
+Minigame Help Off
 Motion Off
 Minigame Vote
 ID: WY9HB6

@@ -468,7 +468,7 @@ html.standalone main { padding-bottom: calc(150px + env(safe-area-inset-bottom))
     </ol>
     <button type="button" class="reset" id="installHide">Hide this</button>
   </details>
-  <p class="version" id="version">v5.4</p>
+  <p class="version" id="version">v5.5</p>
 </main>
 
 <div class="bar">
@@ -668,7 +668,7 @@ html.standalone main { padding-bottom: calc(150px + env(safe-area-inset-bottom))
       lines.push("Map: " + (map.id === "any" ? "any" : map.short));
       lines.push("Turns: " + turns);
       if (!pro) lines.push("Bonus Stars: " + onOff(s.bonus));
-      lines.push("Help: " + onOff(s.help));
+      lines.push("Minigame Help: " + onOff(s.help));
       lines.push("Motion: " + onOff(s.motion));
       if (!pro) lines.push("Minigames: " + s.mg);
     } else {
@@ -676,7 +676,7 @@ html.standalone main { padding-bottom: calc(150px + env(safe-area-inset-bottom))
       lines.push(map.compact);
       lines.push(turns + " Turns");
       if (!pro) lines.push("Bonus " + onOff(s.bonus));
-      lines.push("Help " + onOff(s.help));
+      lines.push("Minigame Help " + onOff(s.help));
       lines.push("Motion " + onOff(s.motion));
       if (!pro) lines.push("Minigame " + s.mg);
     }
