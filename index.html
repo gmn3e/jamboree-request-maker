@@ -255,8 +255,6 @@ html.standalone main { padding-bottom: calc(150px + env(safe-area-inset-bottom))
 .sheet-foot { display: flex; align-items: center; justify-content: space-between; gap: 12px;
   padding: 10px 16px calc(14px + env(safe-area-inset-bottom)); border-top: 1px solid var(--line); }
 html.sheet-open { overflow: hidden; }
-.pro-help-note { margin: 0; padding: 10px 12px; border-radius: 12px; background: var(--chip); color: var(--muted); font-size: 0.9rem; }
-.pro-help-note b { color: var(--ink); }
 .char-chips .chip input:disabled + span { opacity: .4; cursor: not-allowed; }
 .char-chips .chip span { min-height: 36px; padding: 6px 12px; font-size: 0.92rem; }
 .surprise-pop { animation: pop .45s ease-out; }
@@ -396,7 +394,7 @@ html.sheet-open { overflow: hidden; }
             <label class="chip"><input type="radio" name="rules" id="rules-party" value="party" checked><span>Party Rules</span></label>
             <label class="chip"><input type="radio" name="rules" id="rules-pro" value="pro"><span>Pro Rules<small>12 turns, set by the game</small></span></label>
           </div>
-          <p class="hint hidden" id="proNote">Pro Rules fixes the game at 12 turns and sets Bonus Stars and minigame voting itself, so those options are hidden.</p>
+          <p class="hint hidden" id="proNote">Pro Rules fixes the game at 12 turns and sets Bonus Stars and minigame voting itself, so those options are hidden. Minigame Help and Motion can still be changed.</p>
         </fieldset>
         <div class="toggles">
           <label class="toggle" for="bonus" id="bonusRow">
@@ -411,7 +409,6 @@ html.sheet-open { overflow: hidden; }
             <span class="t-name">Motion Minigames</span>
             <span class="switch"><input type="checkbox" id="motion"><i></i></span>
           </label>
-          <p class="pro-help-note hidden" id="proHelpNote"><b>Minigame Help</b> and <b>Motion Minigames</b> are off with Pro Rules. You can still turn them on in the game's settings if your group wants them.</p>
         </div>
         <fieldset id="mgField">
           <legend>Minigame choice</legend>
@@ -508,7 +505,7 @@ html.sheet-open { overflow: hidden; }
     </ol>
     <button type="button" class="reset" id="installHide">Hide this</button>
   </details>
-  <p class="version" id="version">v5.8</p>
+  <p class="version" id="version">v5.9</p>
 </main>
 
 <div class="bar">
@@ -728,7 +725,7 @@ html.sheet-open { overflow: hidden; }
     var map = MAPS.filter(function (m) { return m.id === s.map; })[0] || MAPS[0];
     var pro = s.rules === "pro";
     var turns = pro ? "12" : s.turns;
-    var help = pro ? false : s.help, motion = pro ? false : s.motion;
+    var help = s.help, motion = s.motion;
     if (s.style === "labels") {
       if (pro) lines.push("Rules: Pro");
       lines.push("Map: " + (map.id === "any" ? "any" : map.short));
@@ -783,10 +780,9 @@ html.sheet-open { overflow: hidden; }
     $("takenClear").disabled = !(s.takenList.length || s.taken.trim());
     applyCharLimit(s);
     var isPro = s.rules === "pro";
-    ["turnsField", "bonusRow", "mgField", "helpRow", "motionRow"].forEach(function (id) { $(id).classList.toggle("hidden", isPro); });
+    ["turnsField", "bonusRow", "mgField"].forEach(function (id) { $(id).classList.toggle("hidden", isPro); });
     $("turnsPro").classList.toggle("hidden", !isPro);
     $("proNote").classList.toggle("hidden", !isPro);
-    $("proHelpNote").classList.toggle("hidden", !isPro);
     try { localStorage.setItem(KEY, JSON.stringify(s)); } catch (e) {}
     markActivePreset(s);
   }
