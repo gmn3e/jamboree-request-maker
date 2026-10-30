@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jamboree Request Maker</title>
+<link rel="preload" href="fonts/fredoka-latin-600-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/nunito-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+/* Fonts served from this site (no Google requests) */
+@font-face { font-family: "Fredoka"; font-style: normal; font-weight: 500; font-display: swap; src: url("fonts/fredoka-latin-ext-500-normal.woff2") format("woff2"); unicode-range: U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF; }
+@font-face { font-family: "Fredoka"; font-style: normal; font-weight: 500; font-display: swap; src: url("fonts/fredoka-latin-500-normal.woff2") format("woff2"); unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
+@font-face { font-family: "Fredoka"; font-style: normal; font-weight: 600; font-display: swap; src: url("fonts/fredoka-latin-ext-600-normal.woff2") format("woff2"); unicode-range: U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF; }
+@font-face { font-family: "Fredoka"; font-style: normal; font-weight: 600; font-display: swap; src: url("fonts/fredoka-latin-600-normal.woff2") format("woff2"); unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
+@font-face { font-family: "Nunito"; font-style: normal; font-weight: 500; font-display: swap; src: url("fonts/nunito-latin-ext-500-normal.woff2") format("woff2"); unicode-range: U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF; }
+@font-face { font-family: "Nunito"; font-style: normal; font-weight: 500; font-display: swap; src: url("fonts/nunito-latin-500-normal.woff2") format("woff2"); unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
+@font-face { font-family: "Nunito"; font-style: normal; font-weight: 700; font-display: swap; src: url("fonts/nunito-latin-ext-700-normal.woff2") format("woff2"); unicode-range: U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF; }
+@font-face { font-family: "Nunito"; font-style: normal; font-weight: 700; font-display: swap; src: url("fonts/nunito-latin-700-normal.woff2") format("woff2"); unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
+@font-face { font-family: "Nunito"; font-style: normal; font-weight: 800; font-display: swap; src: url("fonts/nunito-latin-ext-800-normal.woff2") format("woff2"); unicode-range: U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF; }
+@font-face { font-family: "Nunito"; font-style: normal; font-weight: 800; font-display: swap; src: url("fonts/nunito-latin-800-normal.woff2") format("woff2"); unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
+/* Layout: one phone-width column of settings, live Discord-style preview, sticky copy bar. */
+:root {
+  --bg: #f3f5fa;
+  --surface: #ffffff;
+  --ink: #1c1f2e;
+  --muted: #5f6478;
+  --line: #dde1ec;
+  --chip: #eef0f6;
+  --accent: #ffc21a;
+  --accent-ink: #2b1f00;
+  --pop: #e0306a;
+  --pop-ink: #ffffff;
+  --warn: #c2410c;
+  --discord: #313338;
+  --discord-ink: #dbdee1;
+  --font-display: "Fredoka", "Nunito", system-ui, sans-serif;
+  --font-body: "Nunito", system-ui, -apple-system, "Segoe UI", sans-serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #14151c; --surface: #1d1f29; --ink: #eceef6; --muted: #9ea3b8;
+    --line: #2e3140; --chip: #262938; --accent: #ffc21a; --accent-ink: #2b1f00;
+    --pop: #ff4f86; --pop-ink: #1a0610; --warn: #fb923c;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #14151c; --surface: #1d1f29; --ink: #eceef6; --muted: #9ea3b8;
+  --line: #2e3140; --chip: #262938; --accent: #ffc21a; --accent-ink: #2b1f00;
+  --pop: #ff4f86; --pop-ink: #1a0610; --warn: #fb923c;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  background: var(--bg); color: var(--ink);
+  font-family: var(--font-body); font-size: 16px; line-height: 1.4;
+  -webkit-text-size-adjust: 100%;
+}
+main {
+  max-width: 560px; margin: 0 auto;
+  padding: 20px 16px 120px;
+  display: grid; gap: 14px;
+}
+header h1 {
+  font-family: var(--font-display); font-weight: 600;
+  font-size: 1.6rem; margin: 0; text-wrap: balance; letter-spacing: -0.01em;
+}
+header p { margin: 4px 0 0; color: var(--muted); font-size: 0.95rem; }
+.card {
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: 16px; padding: 14px; display: grid; gap: 14px;
+}
+.card h2 {
+  font-family: var(--font-display); font-weight: 600; font-size: 1.05rem; margin: 0;
+}
+fieldset { border: 0; margin: 0; padding: 0; min-width: 0; }
+legend, .label {
+  font-weight: 800; font-size: 0.8rem; text-transform: uppercase;
+  letter-spacing: 0.06em; color: var(--muted); padding: 0; margin-bottom: 8px;
+}
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { position: relative; }
+.chip input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+.chip span {
+  display: inline-flex; flex-direction: column; justify-content: center;
+  min-height: 42px; padding: 8px 14px; border-radius: 999px;
+  background: var(--chip); border: 2px solid transparent;
+  font-weight: 700; cursor: pointer; user-select: none;
+  transition: background .12s, border-color .12s;
+}
+.chip span small { font-weight: 500; font-size: 0.72rem; color: var(--muted); line-height: 1.1; }
+.chip input:checked + span { background: var(--accent); color: var(--accent-ink); }
+.chip input:checked + span small { color: var(--accent-ink); opacity: .75; }
+.chip input:focus-visible + span { border-color: var(--pop); }
+.map-chips .chip span { border-radius: 12px; }
+
+.toggles { display: grid; gap: 4px; }
+.toggle {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 10px 2px; border-bottom: 1px solid var(--line); cursor: pointer;
+}
+.toggle:last-child { border-bottom: 0; }
+.toggle .t-name { font-weight: 700; }
+.toggle .t-name small { display: block; color: var(--muted); font-weight: 500; font-size: 0.8rem; }
+.switch { position: relative; width: 52px; height: 30px; flex: none; }
+.switch input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; }
+.switch i {
+  position: absolute; inset: 0; border-radius: 999px; background: var(--chip);
+  border: 2px solid var(--line); transition: background .12s;
+}
+.switch i::after {
+  content: ""; position: absolute; top: 2px; left: 2px; width: 22px; height: 22px;
+  border-radius: 50%; background: var(--muted); transition: transform .15s, background .15s;
+}
+.switch input:checked + i { background: var(--accent); border-color: var(--accent); }
+.switch input:checked + i::after { transform: translateX(22px); background: var(--accent-ink); }
+.switch input:focus-visible + i { outline: 2px solid var(--pop); outline-offset: 2px; }
+
+.row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.stepper { display: inline-flex; align-items: center; background: var(--chip); border-radius: 999px; }
+.stepper button {
+  width: 42px; height: 42px; border: 0; background: transparent; color: var(--ink);
+  font-size: 1.3rem; font-weight: 800; cursor: pointer; border-radius: 999px;
+}
+.stepper button:focus-visible { outline: 2px solid var(--pop); }
+.stepper output {
+  min-width: 30px; text-align: center; font-family: var(--font-display);
+  font-weight: 600; font-size: 1.25rem; font-variant-numeric: tabular-nums;
+}
+input[type="text"], textarea {
+  width: 100%; font: inherit; color: var(--ink); background: var(--chip);
+  border: 2px solid transparent; border-radius: 12px; padding: 10px 12px;
+}
+input[type="text"]:focus, textarea:focus { outline: none; border-color: var(--pop); }
+input::placeholder, textarea::placeholder { color: var(--muted); opacity: .8; }
+#roomId {
+  font-family: var(--font-display); font-weight: 600; font-size: 1.4rem;
+  letter-spacing: 0.12em; text-transform: uppercase;
+}
+.field { display: grid; gap: 6px; }
+.field label { font-weight: 700; }
+.hint { color: var(--muted); font-size: 0.82rem; margin: 0; }
+.error { color: var(--warn); font-weight: 700; font-size: 0.85rem; margin: 0; }
+.hidden { display: none !important; }
+
+/* Discord-style preview stays in Discord's dark look in both themes */
+.preview {
+  background: var(--discord); color: var(--discord-ink);
+  border-radius: 14px; padding: 14px 16px; border-left: 4px solid var(--accent);
+  font-family: "gg sans", var(--font-body); font-size: 1rem; line-height: 1.45;
+  white-space: pre-wrap; word-break: break-word; user-select: text; -webkit-user-select: text;
+  min-height: 120px;
+}
+.preview .missing { color: #f0b232; font-style: italic; }
+.ping-tip {
+  display: flex; gap: 10px; align-items: flex-start;
+  background: color-mix(in srgb, var(--accent) 18%, var(--surface));
+  border-radius: 12px; padding: 10px 12px; font-size: 0.88rem;
+}
+.ping-tip b { white-space: nowrap; }
+.mention {
+  background: color-mix(in srgb, var(--accent) 45%, transparent);
+  border-radius: 4px; padding: 0 3px; font-weight: 700;
+}
+
+.bar {
+  position: fixed; left: 0; right: 0; bottom: 0;
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  border-top: 1px solid var(--line);
+  padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
+}
+.bar-inner { max-width: 560px; margin: 0 auto; display: flex; gap: 10px; }
+.btn {
+  font: inherit; font-weight: 800; border: 0; border-radius: 14px;
+  padding: 14px 16px; cursor: pointer; min-height: 52px;
+}
+.btn:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.btn-primary { flex: 1; background: var(--pop); color: var(--pop-ink); font-size: 1.05rem; }
+.btn-secondary { background: var(--chip); color: var(--ink); border: 1px solid var(--line); }
+.btn.done { background: #1f9d55; color: #fff; }
+.reset {
+  justify-self: start; background: none; border: 0; color: var(--muted);
+  font: inherit; font-weight: 700; text-decoration: underline; cursor: pointer; padding: 4px 0;
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>Jamboree Request Maker</h1>
+    <p>Pick your settings, copy, and paste it into #jamboree-requests.</p>
+  </header>
+
+  <form id="form" autocomplete="off" novalidate>
+    <div style="display:grid;gap:14px">
+
+      <section class="card" aria-labelledby="h-lobby">
+        <h2 id="h-lobby">Lobby</h2>
+        <fieldset>
+          <legend>Status</legend>
+          <div class="chips">
+            <label class="chip"><input type="radio" name="status" id="st-looking" value="looking" checked><span>Looking for players</span></label>
+            <label class="chip"><input type="radio" name="status" id="st-full" value="full"><span>Full</span></label>
+            <label class="chip"><input type="radio" name="status" id="st-aborted" value="aborted"><span>Session aborted</span></label>
+          </div>
+        </fieldset>
+
+        <div id="lookingBox" style="display:grid;gap:14px">
+          <div class="row">
+            <span class="label" style="margin:0">Players needed</span>
+            <div class="stepper" role="group" aria-label="Players needed">
+              <button type="button" id="needMinus" aria-label="One fewer">−</button>
+              <output id="need" aria-live="polite">2</output>
+              <button type="button" id="needPlus" aria-label="One more">+</button>
+            </div>
+          </div>
+          <div class="field">
+            <label for="taken">Characters already taken <span class="hint">(optional)</span></label>
+            <input type="text" id="taken" placeholder="Luigi, Bowser">
+          </div>
+        </div>
+      </section>
+
+      <section class="card" aria-labelledby="h-board">
+        <h2 id="h-board">Board</h2>
+        <fieldset>
+          <legend>Map</legend>
+          <div class="chips map-chips" id="mapChips"></div>
+        </fieldset>
+        <fieldset>
+          <legend>Turns</legend>
+          <div class="chips" id="turnChips"></div>
+        </fieldset>
+      </section>
+
+      <section class="card" aria-labelledby="h-rules">
+        <h2 id="h-rules">Rules</h2>
+        <div class="toggles">
+          <label class="toggle" for="bonus">
+            <span class="t-name">Bonus Stars</span>
+            <span class="switch"><input type="checkbox" id="bonus" checked><i></i></span>
+          </label>
+          <label class="toggle" for="help">
+            <span class="t-name">Minigame Help<small>Explanation before each minigame</small></span>
+            <span class="switch"><input type="checkbox" id="help"><i></i></span>
+          </label>
+          <label class="toggle" for="motion">
+            <span class="t-name">Motion Minigames</span>
+            <span class="switch"><input type="checkbox" id="motion"><i></i></span>
+          </label>
+        </div>
+        <fieldset>
+          <legend>Minigame choice</legend>
+          <div class="chips">
+            <label class="chip"><input type="radio" name="mg" id="mg-vote" value="Vote" checked><span>Vote</span></label>
+            <label class="chip"><input type="radio" name="mg" id="mg-random" value="Random"><span>Random</span></label>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>House rules</legend>
+          <div class="chips">
+            <label class="chip"><input type="checkbox" id="noTeam"><span>No teaming up</span></label>
+            <label class="chip"><input type="checkbox" id="noQuit"><span>No quitting</span></label>
+          </div>
+        </fieldset>
+        <div class="field">
+          <label for="extra">Anything else <span class="hint">(optional, one per line)</span></label>
+          <textarea id="extra" rows="2" placeholder="Chill game, new players welcome"></textarea>
+        </div>
+      </section>
+
+      <section class="card" aria-labelledby="h-room">
+        <h2 id="h-room">Room</h2>
+        <div class="field">
+          <label for="roomId">Room ID</label>
+          <input type="text" id="roomId" maxlength="10" placeholder="WY9HB6" autocapitalize="characters" spellcheck="false">
+          <p class="error hidden" id="idError">Add your Room ID so people can join.</p>
+        </div>
+        <div class="field">
+          <label for="chat">Voice/text channel <span class="hint">(optional)</span></label>
+          <input type="text" id="chat" placeholder="#tropical-room" spellcheck="false">
+        </div>
+        <fieldset>
+          <legend>Layout</legend>
+          <div class="chips">
+            <label class="chip"><input type="radio" name="style" id="sty-compact" value="compact" checked><span>Compact<small>Mall · 15 Turns · Bonus On</small></span></label>
+            <label class="chip"><input type="radio" name="style" id="sty-labels" value="labels"><span>With labels<small>Map: Mall · Turns: 15</small></span></label>
+          </div>
+        </fieldset>
+      </section>
+
+      <section class="card" aria-labelledby="h-preview">
+        <h2 id="h-preview">Preview</h2>
+        <div class="preview" id="preview" aria-live="polite"></div>
+        <div class="ping-tip">
+          <span>After pasting, type <span class="mention">@Jamboree Matchmaking</span> and tap the role in Discord's list. Pasted text won't ping anyone.</span>
+        </div>
+        <p class="hint" id="copyFail" hidden>Couldn't copy automatically. Press and hold the preview to select and copy it.</p>
+        <button type="button" class="reset" id="reset">Reset to defaults</button>
+      </section>
+    </div>
+  </form>
+</main>
+
+<div class="bar">
+  <div class="bar-inner">
+    <button type="button" class="btn btn-secondary" id="bumpBtn">Copy bump</button>
+    <button type="button" class="btn btn-primary" id="copyBtn">Copy request</button>
+  </div>
+</div>
+
+<script>
+(function () {
+  var MAPS = [
+    { id: "any",     short: "Any",            full: "Any board",               compact: "Any Map" },
+    { id: "mall",    short: "Mall",           full: "Rainbow Galleria",        compact: "Mall" },
+    { id: "goomba",  short: "Goomba",         full: "Goomba Lagoon",           compact: "Goomba Map" },
+    { id: "wiggler", short: "Wiggler",        full: "Mega Wiggler's Tree Party", compact: "Wiggler Map" },
+    { id: "raceway", short: "Raceway",        full: "Roll 'em Raceway",        compact: "Raceway" },
+    { id: "keep",    short: "Bowser's Keep",  full: "King Bowser's Keep",      compact: "Bowser's Keep" },
+    { id: "western", short: "Western Land",   full: "From Mario Party 2",      compact: "Western Land" },
+    { id: "castle",  short: "Rainbow Castle", full: "Mario's Rainbow Castle",  compact: "Rainbow Castle" }
+  ];
+  var TURNS = [10, 15, 20, 25, 30];
+  var KEY = "jamboree-request-v1";
+  var DEFAULTS = {
+    status: "looking", need: 2, taken: "", map: "mall", turns: "15",
+    bonus: true, help: false, motion: false, mg: "Vote",
+    noTeam: false, noQuit: false, extra: "", roomId: "", chat: "", style: "compact"
+  };
+
+  var $ = function (id) { return document.getElementById(id); };
+  var form = $("form");
+
+  // Build map + turn chips
+  var mapBox = $("mapChips");
+  MAPS.forEach(function (m) {
+    var l = document.createElement("label");
+    l.className = "chip";
+    l.innerHTML = '<input type="radio" name="map" id="map-' + m.id + '" value="' + m.id + '"><span>' +
+      m.short + (m.full && m.id !== "any" ? "<small>" + m.full + "</small>" : "") + "</span>";
+    mapBox.appendChild(l);
+  });
+  var turnBox = $("turnChips");
+  TURNS.forEach(function (t) {
+    var l = document.createElement("label");
+    l.className = "chip";
+    l.innerHTML = '<input type="radio" name="turns" id="turns-' + t + '" value="' + t + '"><span>' + t + "</span>";
+    turnBox.appendChild(l);
+  });
+
+  var need = 2;
+  function setNeed(n) {
+    need = Math.max(1, Math.min(3, n));
+    $("need").textContent = need;
+    $("needMinus").disabled = need <= 1;
+    $("needPlus").disabled = need >= 3;
+  }
+  $("needMinus").addEventListener("click", function () { setNeed(need - 1); update(); });
+  $("needPlus").addEventListener("click", function () { setNeed(need + 1); update(); });
+
+  function radio(name) {
+    var el = form.querySelector('input[name="' + name + '"]:checked');
+    return el ? el.value : null;
+  }
+  function setRadio(name, value) {
+    var el = form.querySelector('input[name="' + name + '"][value="' + value + '"]');
+    if (el) el.checked = true;
+  }
+
+  function read() {
+    return {
+      status: radio("status"), need: need, taken: $("taken").value,
+      map: radio("map"), turns: radio("turns"),
+      bonus: $("bonus").checked, help: $("help").checked, motion: $("motion").checked,
+      mg: radio("mg"), noTeam: $("noTeam").checked, noQuit: $("noQuit").checked,
+      extra: $("extra").value, roomId: $("roomId").value, chat: $("chat").value,
+      style: radio("style")
+    };
+  }
+  function apply(s) {
+    setRadio("status", s.status); setNeed(s.need); $("taken").value = s.taken;
+    setRadio("map", s.map); setRadio("turns", s.turns);
+    $("bonus").checked = s.bonus; $("help").checked = s.help; $("motion").checked = s.motion;
+    setRadio("mg", s.mg); $("noTeam").checked = s.noTeam; $("noQuit").checked = s.noQuit;
+    $("extra").value = s.extra; $("roomId").value = s.roomId; $("chat").value = s.chat;
+    setRadio("style", s.style);
+  }
+
+  function joinNames(text) {
+    var parts = text.split(/\s*(?:,|&|\+|\/|\band\b)\s*/i)
+      .map(function (p) {
+        return p.trim().replace(/(^|[\s.-])(\p{Ll})/gu, function (m, a, b) { return a + b.toUpperCase(); });
+      }).filter(Boolean);
+    if (parts.length <= 1) return parts.join("");
+    return parts.slice(0, -1).join(", ") + " & " + parts[parts.length - 1];
+  }
+  function onOff(b) { return b ? "On" : "Off"; }
+
+  function build(s) {
+    var lines = [];
+    if (s.status === "looking") {
+      var head = "Looking for " + s.need;
+      var taken = joinNames(s.taken);
+      if (taken) head += ", " + taken + " Taken";
+      lines.push(head);
+    } else if (s.status === "full") {
+      lines.push("FULL");
+    } else {
+      lines.push("Session Aborted");
+    }
+
+    var map = MAPS.filter(function (m) { return m.id === s.map; })[0] || MAPS[0];
+    if (s.style === "labels") {
+      lines.push("Map: " + (map.id === "any" ? "any" : map.short));
+      lines.push("Turns: " + s.turns);
+      lines.push("Bonus Stars: " + onOff(s.bonus));
+      lines.push("Help: " + onOff(s.help));
+      lines.push("Motion: " + onOff(s.motion));
+      lines.push("Minigames: " + s.mg);
+    } else {
+      lines.push(map.compact);
+      lines.push(s.turns + " Turns");
+      lines.push("Bonus " + onOff(s.bonus));
+      lines.push("Help " + onOff(s.help));
+      lines.push("Motion " + onOff(s.motion));
+      lines.push("Minigame " + s.mg);
+    }
+
+    if (s.noTeam && s.noQuit) lines.push("No teaming up or quitting");
+    else if (s.noTeam) lines.push("No teaming up");
+    else if (s.noQuit) lines.push("No quitting");
+    s.extra.split("\n").map(function (x) { return x.trim(); }).filter(Boolean)
+      .forEach(function (x) { lines.push(x); });
+
+    var id = s.roomId.trim().toUpperCase().replace(/\s+/g, "");
+    lines.push("ID: " + (id || "\u0000"));
+
+    var chat = s.chat.trim();
+    if (chat) {
+      if (chat.charAt(0) !== "#") chat = "#" + chat;
+      lines.push("");
+      lines.push("CHAT: " + chat.replace(/\s+/g, "-").toLowerCase());
+    }
+    return lines.join("\n");
+  }
+
+  function escapeHtml(t) {
+    return t.replace(/[&<>"]/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c];
+    });
+  }
+
+  var current = "";
+  function update() {
+    var s = read();
+    $("lookingBox").classList.toggle("hidden", s.status !== "looking");
+    current = build(s);
+    $("preview").innerHTML = escapeHtml(current)
+      .replace("\u0000", '<span class="missing">add your Room ID</span>');
+    if (s.roomId.trim()) $("idError").classList.add("hidden");
+    $("bumpBtn").classList.toggle("hidden", s.status !== "looking");
+    try { localStorage.setItem(KEY, JSON.stringify(s)); } catch (e) {}
+  }
+
+  function copyText(text) {
+    function fallback() {
+      var ta = document.createElement("textarea");
+      ta.value = text; ta.setAttribute("readonly", "");
+      ta.style.position = "fixed"; ta.style.top = "0"; ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.select(); ta.setSelectionRange(0, text.length);
+      var ok = false;
+      try { ok = document.execCommand("copy"); } catch (e) {}
+      ta.remove();
+      return ok;
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      return navigator.clipboard.writeText(text).then(function () { return true; }, function () { return fallback(); });
+    }
+    return Promise.resolve(fallback());
+  }
+
+  function flash(btn, label) {
+    var orig = btn.dataset.label || btn.textContent;
+    btn.dataset.label = orig;
+    btn.textContent = label;
+    btn.classList.add("done");
+    clearTimeout(btn._t);
+    btn._t = setTimeout(function () { btn.textContent = orig; btn.classList.remove("done"); }, 1600);
+  }
+
+  $("copyBtn").addEventListener("click", function () {
+    if (!$("roomId").value.trim()) {
+      $("idError").classList.remove("hidden");
+      $("roomId").focus();
+      $("roomId").scrollIntoView({ block: "center", behavior: "smooth" });
+      return;
+    }
+    var btn = this;
+    copyText(current).then(function (ok) {
+      $("copyFail").hidden = ok;
+      if (ok) flash(btn, "Copied! Paste it in Discord");
+    });
+  });
+
+  $("bumpBtn").addEventListener("click", function () {
+    var btn = this;
+    copyText("Still looking for " + need + "!!").then(function (ok) {
+      $("copyFail").hidden = ok;
+      if (ok) flash(btn, "Copied!");
+    });
+  });
+
+  $("reset").addEventListener("click", function () { apply(DEFAULTS); update(); });
+
+  $("roomId").addEventListener("input", function () {
+    var pos = this.selectionStart;
+    this.value = this.value.toUpperCase();
+    try { this.setSelectionRange(pos, pos); } catch (e) {}
+  });
+  form.addEventListener("input", update);
+  form.addEventListener("change", update);
+  form.addEventListener("submit", function (e) { e.preventDefault(); });
+
+  var saved = null;
+  try { saved = JSON.parse(localStorage.getItem(KEY) || "null"); } catch (e) {}
+  var start = {};
+  Object.keys(DEFAULTS).forEach(function (k) {
+    start[k] = saved && saved[k] !== undefined ? saved[k] : DEFAULTS[k];
+  });
+  apply(start);
+  update();
+})();
+</script>
+</body>
+</html>
