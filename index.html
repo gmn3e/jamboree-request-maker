@@ -11,7 +11,7 @@
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
-<meta name="theme-color" content="#e0306a">
+<meta name="theme-color" content="#ffc21a">
 <link rel="preload" href="fonts/fredoka-latin-600-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/nunito-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
 <style>
@@ -28,17 +28,20 @@
 @font-face { font-family: "Nunito"; font-style: normal; font-weight: 800; font-display: swap; src: url("fonts/nunito-latin-800-normal.woff2") format("woff2"); unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
 /* Layout: one phone-width column of settings, live Discord-style preview, sticky copy bar. */
 :root {
-  --bg: #f3f5fa;
+  /* Party Lobby: white-first; yellow = action, blue = selected, green = success */
+  --bg: #ffffff;
   --surface: #ffffff;
-  --ink: #1c1f2e;
-  --muted: #5f6478;
-  --line: #dde1ec;
-  --chip: #eef0f6;
-  --accent: #ffc21a;
-  --accent-ink: #2b1f00;
-  --pop: #e0306a;
-  --pop-ink: #ffffff;
-  --warn: #c2410c;
+  --ink: #141a2a;
+  --muted: #545d73;
+  --line: #dde3ee;
+  --chip: #f3f6fb;
+  --accent: #1d63e0;
+  --accent-ink: #ffffff;
+  --pop: #ffc21a;
+  --pop-ink: #2b1f00;
+  --warn: #a8141f;
+  --success: #22a447;
+  --success-ink: #0b1f12;
   --discord: #313338;
   --discord-ink: #dbdee1;
   --font-display: "Fredoka", "Nunito", system-ui, sans-serif;
@@ -47,16 +50,16 @@
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #14151c; --surface: #1d1f29; --ink: #eceef6; --muted: #9ea3b8;
-    --line: #2e3140; --chip: #262938; --accent: #ffc21a; --accent-ink: #2b1f00;
-    --pop: #ff4f86; --pop-ink: #1a0610; --warn: #fb923c;
+    --bg: #0f1420; --surface: #151b2b; --ink: #f2f5fb; --muted: #a6afc3;
+    --line: #2a3449; --chip: #182033; --accent: #1d63e0; --accent-ink: #ffffff;
+    --pop: #ffc21a; --pop-ink: #2b1f00; --warn: #ff8c93;
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #14151c; --surface: #1d1f29; --ink: #eceef6; --muted: #9ea3b8;
-  --line: #2e3140; --chip: #262938; --accent: #ffc21a; --accent-ink: #2b1f00;
-  --pop: #ff4f86; --pop-ink: #1a0610; --warn: #fb923c;
+  --bg: #0f1420; --surface: #151b2b; --ink: #f2f5fb; --muted: #a6afc3;
+  --line: #2a3449; --chip: #182033; --accent: #1d63e0; --accent-ink: #ffffff;
+  --pop: #ffc21a; --pop-ink: #2b1f00; --warn: #ff8c93;
   color-scheme: dark;
 }
 * { box-sizing: border-box; }
@@ -206,7 +209,7 @@ html.standalone main { padding-bottom: calc(150px + env(safe-area-inset-bottom))
   padding: 9px 14px; min-height: 40px; background: var(--chip); color: var(--ink); border: 1px solid var(--line);
 }
 .btn-small.btn-accent { background: var(--pop); color: var(--pop-ink); border-color: transparent; }
-.btn-small.done { background: #1f9d55; color: #fff; border-color: transparent; }
+.btn-small.done { background: var(--success); color: var(--success-ink); border-color: transparent; }
 .btn-small.danger { color: var(--warn); }
 .btn-small.danger.armed { background: var(--warn); color: #fff; border-color: transparent; }
 .preset-actions { display: flex; flex-wrap: wrap; gap: 8px; }
@@ -286,12 +289,73 @@ html.sheet-open { overflow: hidden; }
 .btn:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 .btn-primary { flex: 1; background: var(--pop); color: var(--pop-ink); font-size: 1.05rem; }
 .btn-secondary { background: var(--chip); color: var(--ink); border: 1px solid var(--line); }
-.btn.done { background: #1f9d55; color: #fff; }
+.btn.done { background: var(--success); color: var(--success-ink); }
 .reset {
   justify-self: start; background: none; border: 0; color: var(--muted);
   font: inherit; font-weight: 700; text-decoration: underline; cursor: pointer; padding: 4px 0;
 }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+
+/* ---------- Festive layer: chunky "pressable" pieces, panel cards, a game-menu header ---------- */
+:root {
+  --edge-pop: #c99400; --edge-accent: #1448a8; --edge-success: #17803a;
+  --edge-chip: #d6dce8; --edge-card: #e6ebf3;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --edge-pop: #9c7300; --edge-accent: #0f3a8c; --edge-success: #126b30; --edge-chip: #0a0f19; --edge-card: #090d16; }
+}
+:root[data-theme="dark"] { --edge-pop: #9c7300; --edge-accent: #0f3a8c; --edge-success: #126b30; --edge-chip: #0a0f19; --edge-card: #090d16; }
+
+/* Header: a blue title panel with a die-pip pattern fading in from the right */
+header {
+  position: relative; overflow: hidden; isolation: isolate;
+  background: var(--accent); color: #fff; border-radius: 20px;
+  padding: 20px 20px 22px; box-shadow: 0 5px 0 var(--edge-accent);
+}
+header::after {
+  content: ""; position: absolute; inset: 0 0 0 40%; z-index: -1;
+  background-image: radial-gradient(circle, rgba(255,255,255,.22) 3px, transparent 3.6px);
+  background-size: 18px 18px;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 70%); mask-image: linear-gradient(90deg, transparent, #000 70%);
+}
+header h1 { color: #fff; }
+header p { color: rgba(255,255,255,.88); }
+
+/* Cards read as game panels: 2px frame with a solid bottom edge */
+.card { border-width: 2px; box-shadow: 0 4px 0 var(--edge-card); }
+.card h2, .install-title { display: flex; align-items: center; gap: 10px; }
+.card h2::before { content: ""; width: 6px; height: 20px; border-radius: 3px; background: var(--pop); flex: none; }
+
+/* Chips and small buttons: pressable, with an edge underneath */
+.chip span, .pchip, .btn-small, .stepper, .char-summary .btn-small {
+  box-shadow: 0 3px 0 var(--edge-chip);
+  transition: transform .08s ease, box-shadow .08s ease, background .12s;
+}
+.chip input:checked + span, .pchip.active { box-shadow: 0 3px 0 var(--edge-accent); }
+.chip:active span, .pchip:active, .btn-small:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--edge-chip); }
+.chip input:checked + span { animation: chip-pop .18s ease-out; }
+@keyframes chip-pop { 0% { transform: scale(.94); } 70% { transform: scale(1.04); } 100% { transform: scale(1); } }
+.btn-small.btn-accent { box-shadow: 0 3px 0 var(--edge-pop); }
+.btn-small.done { box-shadow: 0 3px 0 var(--edge-success); }
+
+/* Big buttons: chunky, press down when tapped */
+.btn { transition: transform .08s ease, box-shadow .08s ease, background .12s; }
+.btn-primary { box-shadow: 0 5px 0 var(--edge-pop); font-family: var(--font-display); font-weight: 600; font-size: 1.15rem; letter-spacing: .01em; }
+.btn-secondary { box-shadow: 0 4px 0 var(--edge-chip); }
+.btn:active { transform: translateY(3px); }
+.btn-primary:active { box-shadow: 0 2px 0 var(--edge-pop); }
+.btn-secondary:active { box-shadow: 0 1px 0 var(--edge-chip); }
+.btn.done { box-shadow: 0 5px 0 var(--edge-success); }
+.bar { padding-top: 12px; }
+
+/* Stepper number and switch knob get a little weight */
+.stepper output { font-size: 1.4rem; }
+.switch input:checked + i { box-shadow: inset 0 -2px 0 var(--edge-accent); }
+
+@media (prefers-reduced-motion: reduce) {
+  .chip input:checked + span { animation: none; }
+  .btn:active, .chip:active span, .pchip:active, .btn-small:active { transform: none; }
+}
 </style>
 </head>
 <body>
@@ -505,7 +569,7 @@ html.sheet-open { overflow: hidden; }
     </ol>
     <button type="button" class="reset" id="installHide">Hide this</button>
   </details>
-  <p class="version" id="version">v5.9</p>
+  <p class="version" id="version">v6.0</p>
 </main>
 
 <div class="bar">
