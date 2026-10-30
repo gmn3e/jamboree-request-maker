@@ -347,6 +347,8 @@ header p { color: rgba(255,255,255,.88); }
 .btn-secondary:active { box-shadow: 0 1px 0 var(--edge-chip); }
 .btn.done { box-shadow: 0 5px 0 var(--edge-success); }
 .bar { padding-top: 12px; }
+/* Leave room below chips (and their bottom edge) before a note */
+.chips + .hint { margin-top: 14px; }
 
 /* Stepper number and switch knob get a little weight */
 .stepper output { font-size: 1.4rem; }
@@ -569,7 +571,7 @@ header p { color: rgba(255,255,255,.88); }
     </ol>
     <button type="button" class="reset" id="installHide">Hide this</button>
   </details>
-  <p class="version" id="version">v6.0</p>
+  <p class="version" id="version">v6.1</p>
 </main>
 
 <div class="bar">
