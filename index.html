@@ -232,6 +232,8 @@ html.standalone main { padding-bottom: calc(150px + env(safe-area-inset-bottom))
 .label-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .field-label { font-weight: 700; }
 .char-chips { gap: 6px; }
+.pro-help-note { margin: 0; padding: 10px 12px; border-radius: 12px; background: var(--chip); color: var(--muted); font-size: 0.9rem; }
+.pro-help-note b { color: var(--ink); }
 .char-chips .chip input:disabled + span { opacity: .4; cursor: not-allowed; }
 .char-chips .chip span { min-height: 36px; padding: 6px 12px; font-size: 0.92rem; }
 .surprise-pop { animation: pop .45s ease-out; }
@@ -364,14 +366,15 @@ html.standalone main { padding-bottom: calc(150px + env(safe-area-inset-bottom))
             <span class="t-name">Bonus Stars</span>
             <span class="switch"><input type="checkbox" id="bonus" checked><i></i></span>
           </label>
-          <label class="toggle" for="help">
+          <label class="toggle" for="help" id="helpRow">
             <span class="t-name">Minigame Help<small>Explanation before each minigame</small></span>
             <span class="switch"><input type="checkbox" id="help"><i></i></span>
           </label>
-          <label class="toggle" for="motion">
+          <label class="toggle" for="motion" id="motionRow">
             <span class="t-name">Motion Minigames</span>
             <span class="switch"><input type="checkbox" id="motion"><i></i></span>
           </label>
+          <p class="pro-help-note hidden" id="proHelpNote"><b>Minigame Help</b> and <b>Motion Minigames</b> are off with Pro Rules. You can still turn them on in the game's settings if your group wants them.</p>
         </div>
         <fieldset id="mgField">
           <legend>Minigame choice</legend>
@@ -468,7 +471,7 @@ html.standalone main { padding-bottom: calc(150px + env(safe-area-inset-bottom))
     </ol>
     <button type="button" class="reset" id="installHide">Hide this</button>
   </details>
-  <p class="version" id="version">v5.5</p>
+  <p class="version" id="version">v5.6</p>
 </main>
 
 <div class="bar">
@@ -663,21 +666,22 @@ html.standalone main { padding-bottom: calc(150px + env(safe-area-inset-bottom))
     var map = MAPS.filter(function (m) { return m.id === s.map; })[0] || MAPS[0];
     var pro = s.rules === "pro";
     var turns = pro ? "12" : s.turns;
+    var help = pro ? false : s.help, motion = pro ? false : s.motion;
     if (s.style === "labels") {
       if (pro) lines.push("Rules: Pro");
       lines.push("Map: " + (map.id === "any" ? "any" : map.short));
       lines.push("Turns: " + turns);
       if (!pro) lines.push("Bonus Stars: " + onOff(s.bonus));
-      lines.push("Minigame Help: " + onOff(s.help));
-      lines.push("Motion: " + onOff(s.motion));
+      lines.push("Minigame Help: " + onOff(help));
+      lines.push("Motion: " + onOff(motion));
       if (!pro) lines.push("Minigames: " + s.mg);
     } else {
       if (pro) lines.push("Pro Rules");
       lines.push(map.compact);
       lines.push(turns + " Turns");
       if (!pro) lines.push("Bonus " + onOff(s.bonus));
-      lines.push("Minigame Help " + onOff(s.help));
-      lines.push("Motion " + onOff(s.motion));
+      lines.push("Minigame Help " + onOff(help));
+      lines.push("Motion " + onOff(motion));
       if (!pro) lines.push("Minigame " + s.mg);
     }
 
@@ -717,9 +721,10 @@ html.standalone main { padding-bottom: calc(150px + env(safe-area-inset-bottom))
     $("takenClear").classList.toggle("hidden", !(s.takenList.length || s.taken.trim()));
     applyCharLimit(s);
     var isPro = s.rules === "pro";
-    ["turnsField", "bonusRow", "mgField"].forEach(function (id) { $(id).classList.toggle("hidden", isPro); });
+    ["turnsField", "bonusRow", "mgField", "helpRow", "motionRow"].forEach(function (id) { $(id).classList.toggle("hidden", isPro); });
     $("turnsPro").classList.toggle("hidden", !isPro);
     $("proNote").classList.toggle("hidden", !isPro);
+    $("proHelpNote").classList.toggle("hidden", !isPro);
     try { localStorage.setItem(KEY, JSON.stringify(s)); } catch (e) {}
     markActivePreset(s);
   }
