@@ -24,7 +24,7 @@ ID: WY9HB6
 **Lobby**
 - Status: looking for 1–3 players, full, or session aborted
 - **Copy bump** for a quick "Still looking for 2!!"
-- Characters already taken: tap **Choose** to pick from all 22 characters in a pop-up, or type a name. The pop-up won't let the lobby go over 4 players (taken characters + players still needed).
+- Characters already taken: tap **Choose** to pick from all 22 characters in a pop-up. It won't let the lobby go over 4 players (taken characters + players still needed).
 
 **Board and rules**
 - All seven boards, 10–30 turns, or **Surprise me** for a random board and turn count
@@ -50,10 +50,6 @@ Your last settings and presets are remembered in your own browser. The version n
 ## Privacy
 
 The page has no tracking, cookies, accounts or forms, and sends nothing you type anywhere. Settings and presets stay on your own device. Fonts are served from this site, not from Google. GitHub Pages, the host, keeps standard server logs.
-
-## Updates
-
-Changes go live through GitHub Pages, usually within a few minutes. Browsers and home-screen apps may keep the previous version for up to about 10 minutes: reload the page, or close and reopen the home-screen app.
 
 ## Files
 

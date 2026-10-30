@@ -361,8 +361,7 @@ html.sheet-open { overflow: hidden; }
             <p class="hint" id="limitHint"></p>
             <div class="sheet-body">
               <div class="chips char-chips" id="charChips" role="group" aria-labelledby="takenLabel"></div>
-              <label for="taken" class="hint">Someone else? Type it here</label>
-              <input type="text" id="taken" placeholder="e.g. a name not in the list">
+              <input type="hidden" id="taken" value="">
             </div>
             <div class="sheet-foot">
               <button type="button" class="link-btn" id="takenClear">Clear all</button>
@@ -509,7 +508,7 @@ html.sheet-open { overflow: hidden; }
     </ol>
     <button type="button" class="reset" id="installHide">Hide this</button>
   </details>
-  <p class="version" id="version">v5.7</p>
+  <p class="version" id="version">v5.8</p>
 </main>
 
 <div class="bar">
@@ -631,8 +630,6 @@ html.sheet-open { overflow: hidden; }
     Array.prototype.forEach.call(form.querySelectorAll('input[name="char"]'), function (el) {
       el.disabled = !el.checked && count >= limit;
     });
-    $("taken").readOnly = count >= limit && !s.taken.trim();
-    $("taken").placeholder = count >= limit && !s.taken.trim() ? "Lobby is full of characters" : "e.g. a name not in the list";
     $("takenLimit").textContent = "(" + count + "/" + limit + ")";
     $("limitHint").textContent = s.status === "looking"
       ? "Up to " + limit + " while you're looking for " + s.need + (s.need === 1 ? " player." : " players.")
@@ -697,7 +694,7 @@ html.sheet-open { overflow: hidden; }
     };
   }
   function apply(s) {
-    setRadio("status", s.status); setNeed(s.need); $("taken").value = s.taken; setChars(s.takenList);
+    setRadio("status", s.status); setNeed(s.need); $("taken").value = ""; setChars(s.takenList);
     setRadio("rules", s.rules || "party"); setRadio("map", s.map); setRadio("turns", s.turns);
     $("bonus").checked = s.bonus; $("help").checked = s.help; $("motion").checked = s.motion;
     setRadio("mg", s.mg); $("noTeam").checked = s.noTeam; $("noQuit").checked = s.noQuit;
