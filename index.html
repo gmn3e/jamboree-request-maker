@@ -232,6 +232,7 @@ html.standalone main { padding-bottom: calc(150px + env(safe-area-inset-bottom))
 .label-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .field-label { font-weight: 700; }
 .char-chips { gap: 6px; }
+.char-chips .chip input:disabled + span { opacity: .4; cursor: not-allowed; }
 .char-chips .chip span { min-height: 36px; padding: 6px 12px; font-size: 0.92rem; }
 .surprise-pop { animation: pop .45s ease-out; }
 @keyframes pop { 0% { transform: scale(.9); } 60% { transform: scale(1.06); } 100% { transform: scale(1); } }
@@ -321,7 +322,7 @@ html.standalone main { padding-bottom: calc(150px + env(safe-area-inset-bottom))
           </div>
           <div class="field">
             <span class="label-row">
-              <span class="field-label" id="takenLabel">Characters already taken <span class="hint">(optional)</span></span>
+              <span class="field-label" id="takenLabel">Characters already taken <span class="hint" id="takenLimit">(optional)</span></span>
               <button type="button" class="link-btn hidden" id="takenClear">Clear</button>
             </span>
             <div class="chips char-chips" id="charChips" role="group" aria-labelledby="takenLabel"></div>
@@ -458,7 +459,7 @@ html.standalone main { padding-bottom: calc(150px + env(safe-area-inset-bottom))
     </ol>
     <button type="button" class="reset" id="installHide">Hide this</button>
   </details>
-  <p class="version" id="version">v5.2</p>
+  <p class="version" id="version">v5.3</p>
 </main>
 
 <div class="bar">
@@ -566,6 +567,27 @@ html.standalone main { padding-bottom: calc(150px + env(safe-area-inset-bottom))
       el.checked = list.indexOf(el.value) >= 0;
     });
   }
+  // A board has 4 players: taken characters + players still needed can't go over 4
+  var LOBBY_SIZE = 4;
+  function typedNames(text) {
+    return String(text || "").split(/\s*(?:,|&|\+|\/|\band\b)\s*/i).filter(function (x) { return x.trim(); });
+  }
+  function charLimit(s) {
+    return s.status === "looking" ? LOBBY_SIZE - s.need : LOBBY_SIZE;
+  }
+  function applyCharLimit(s) {
+    var limit = charLimit(s);
+    var count = s.takenList.length + typedNames(s.taken).length;
+    Array.prototype.forEach.call(form.querySelectorAll('input[name="char"]'), function (el) {
+      el.disabled = !el.checked && count >= limit;
+    });
+    $("taken").readOnly = count >= limit && !s.taken.trim();
+    $("taken").placeholder = count >= limit && !s.taken.trim() ? "Lobby is full of characters" : "e.g. a name not in the list";
+    $("takenLimit").textContent = "(" + count + "/" + limit + ")";
+    // Don't let "players needed" push the lobby over 4 either
+    $("needPlus").disabled = need >= 3 || (s.status === "looking" && need + count >= LOBBY_SIZE);
+  }
+
   $("takenClear").addEventListener("click", function () { setChars([]); $("taken").value = ""; update(); });
 
   var need = 2;
@@ -576,7 +598,7 @@ html.standalone main { padding-bottom: calc(150px + env(safe-area-inset-bottom))
     $("needPlus").disabled = need >= 3;
   }
   $("needMinus").addEventListener("click", function () { setNeed(need - 1); update(); });
-  $("needPlus").addEventListener("click", function () { setNeed(need + 1); update(); });
+  $("needPlus").addEventListener("click", function () { if (this.disabled) return; setNeed(need + 1); update(); });
 
   function radio(name) {
     var el = form.querySelector('input[name="' + name + '"]:checked');
@@ -680,6 +702,7 @@ html.standalone main { padding-bottom: calc(150px + env(safe-area-inset-bottom))
     if (s.roomId.trim()) $("idError").classList.add("hidden");
     $("bumpBtn").classList.toggle("hidden", s.status !== "looking");
     $("takenClear").classList.toggle("hidden", !(s.takenList.length || s.taken.trim()));
+    applyCharLimit(s);
     try { localStorage.setItem(KEY, JSON.stringify(s)); } catch (e) {}
     markActivePreset(s);
   }
