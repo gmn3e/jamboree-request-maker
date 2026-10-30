@@ -483,13 +483,6 @@ header p { color: rgba(255,255,255,.88); }
             <label class="chip"><input type="radio" name="mg" id="mg-random" value="Random"><span>Random</span></label>
           </div>
         </fieldset>
-        <fieldset>
-          <legend>House rules</legend>
-          <div class="chips">
-            <label class="chip"><input type="checkbox" id="noTeam"><span>No teaming up</span></label>
-            <label class="chip"><input type="checkbox" id="noQuit"><span>No quitting</span></label>
-          </div>
-        </fieldset>
         <div class="field">
           <label for="extra">Anything else <span class="hint">(optional, one per line)</span></label>
           <textarea id="extra" rows="2" placeholder="Chill game, new players welcome"></textarea>
@@ -571,7 +564,7 @@ header p { color: rgba(255,255,255,.88); }
     </ol>
     <button type="button" class="reset" id="installHide">Hide this</button>
   </details>
-  <p class="version" id="version">v6.1</p>
+  <p class="version" id="version">v6.2</p>
 </main>
 
 <div class="bar">
@@ -638,7 +631,7 @@ header p { color: rgba(255,255,255,.88); }
   var DEFAULTS = {
     status: "looking", need: 2, taken: "", takenList: [], rules: "party", map: "mall", turns: "15",
     bonus: true, help: false, motion: false, mg: "Vote",
-    noTeam: false, noQuit: false, extra: "", roomId: "", chat: "", style: "compact"
+    extra: "", roomId: "", chat: "", style: "compact"
   };
 
   var $ = function (id) { return document.getElementById(id); };
@@ -751,7 +744,7 @@ header p { color: rgba(255,255,255,.88); }
       status: radio("status"), need: need, taken: $("taken").value, takenList: selectedChars(),
       rules: radio("rules") || "party", map: radio("map"), turns: radio("turns"),
       bonus: $("bonus").checked, help: $("help").checked, motion: $("motion").checked,
-      mg: radio("mg"), noTeam: $("noTeam").checked, noQuit: $("noQuit").checked,
+      mg: radio("mg"),
       extra: $("extra").value, roomId: $("roomId").value, chat: $("chat").value,
       style: radio("style")
     };
@@ -760,7 +753,7 @@ header p { color: rgba(255,255,255,.88); }
     setRadio("status", s.status); setNeed(s.need); $("taken").value = ""; setChars(s.takenList);
     setRadio("rules", s.rules || "party"); setRadio("map", s.map); setRadio("turns", s.turns);
     $("bonus").checked = s.bonus; $("help").checked = s.help; $("motion").checked = s.motion;
-    setRadio("mg", s.mg); $("noTeam").checked = s.noTeam; $("noQuit").checked = s.noQuit;
+    setRadio("mg", s.mg);
     $("extra").value = s.extra; $("roomId").value = s.roomId; $("chat").value = s.chat;
     setRadio("style", s.style);
   }
@@ -810,9 +803,6 @@ header p { color: rgba(255,255,255,.88); }
       if (!pro) lines.push("Minigame " + s.mg);
     }
 
-    if (s.noTeam && s.noQuit) lines.push("No teaming up or quitting");
-    else if (s.noTeam) lines.push("No teaming up");
-    else if (s.noQuit) lines.push("No quitting");
     s.extra.split("\n").map(function (x) { return x.trim(); }).filter(Boolean)
       .forEach(function (x) { lines.push(x); });
 
@@ -943,7 +933,7 @@ header p { color: rgba(255,255,255,.88); }
   /* ---------- Presets + share links ---------- */
   var PRESET_KEY = "jamboree-presets-v1";
   var MAX_PRESETS = 6;
-  var PRESET_FIELDS = ["rules", "map", "turns", "bonus", "help", "motion", "mg", "noTeam", "noQuit", "extra", "chat", "style"];
+  var PRESET_FIELDS = ["rules", "map", "turns", "bonus", "help", "motion", "mg", "extra", "chat", "style"];
   var presets = [];
   try {
     var rawP = JSON.parse(localStorage.getItem(PRESET_KEY) || "[]");
@@ -973,7 +963,7 @@ header p { color: rgba(255,255,255,.88); }
     o.turns = String(o.turns);
     if (o.mg !== "Vote" && o.mg !== "Random") o.mg = DEFAULTS.mg;
     if (o.style !== "compact" && o.style !== "labels") o.style = DEFAULTS.style;
-    ["bonus", "help", "motion", "noTeam", "noQuit"].forEach(function (k) { o[k] = !!o[k]; });
+    ["bonus", "help", "motion"].forEach(function (k) { o[k] = !!o[k]; });
     o.extra = String(o.extra || "").slice(0, 300);
     o.chat = String(o.chat || "").slice(0, 60);
     return o;
@@ -1077,8 +1067,6 @@ header p { color: rgba(255,255,255,.88); }
     q.set("map", c.map); q.set("turns", c.turns);
     q.set("bonus", c.bonus ? "1" : "0"); q.set("help", c.help ? "1" : "0"); q.set("motion", c.motion ? "1" : "0");
     q.set("mg", c.mg.toLowerCase());
-    if (c.noTeam) q.set("team", "0");
-    if (c.noQuit) q.set("quit", "0");
     if (c.style !== "compact") q.set("style", c.style);
     if (c.chat.trim()) q.set("chat", c.chat.trim());
     if (c.extra.trim()) q.set("rules", c.extra.trim());
@@ -1095,7 +1083,6 @@ header p { color: rgba(255,255,255,.88); }
         map: q.get("map"), turns: q.get("turns"),
         bonus: q.get("bonus") !== "0", help: q.get("help") === "1", motion: q.get("motion") === "1",
         mg: mg === "random" ? "Random" : "Vote",
-        noTeam: q.get("team") === "0", noQuit: q.get("quit") === "0",
         style: q.get("style") || "compact", chat: q.get("chat") || "", extra: q.get("rules") || ""
       })
     };
