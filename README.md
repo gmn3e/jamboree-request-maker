@@ -2,7 +2,7 @@
 
 A small web page for writing **Super Mario Party Jamboree** lobby requests in the format used in `#jamboree-requests` on the Mario Party Netplay Discord server.
 
-**Use it here:** https://gmn3e.github.io/jamboree-request-maker/
+**Use it here:** https://rollandpost.app/
 
 Pick your settings, tap **Copy request**, and paste it into Discord. For example:
 
