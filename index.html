@@ -229,6 +229,13 @@ html.standalone main { padding-bottom: calc(150px + env(safe-area-inset-bottom))
 }
 .banner-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
 
+.label-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.field-label { font-weight: 700; }
+.char-chips { gap: 6px; }
+.char-chips .chip span { min-height: 36px; padding: 6px 12px; font-size: 0.92rem; }
+.surprise-pop { animation: pop .45s ease-out; }
+@keyframes pop { 0% { transform: scale(.9); } 60% { transform: scale(1.06); } 100% { transform: scale(1); } }
+
 .install { gap: 10px; }
 .install summary {
   list-style: none; cursor: pointer; display: grid; gap: 2px;
@@ -313,14 +320,23 @@ html.standalone main { padding-bottom: calc(150px + env(safe-area-inset-bottom))
             </div>
           </div>
           <div class="field">
-            <label for="taken">Characters already taken <span class="hint">(optional)</span></label>
-            <input type="text" id="taken" placeholder="Luigi, Bowser">
+            <span class="label-row">
+              <span class="field-label" id="takenLabel">Characters already taken <span class="hint">(optional)</span></span>
+              <button type="button" class="link-btn hidden" id="takenClear">Clear</button>
+            </span>
+            <div class="chips char-chips" id="charChips" role="group" aria-labelledby="takenLabel"></div>
+            <label for="taken" class="hint">Someone else? Type it here</label>
+            <input type="text" id="taken" placeholder="e.g. a name not in the list">
           </div>
         </div>
       </section>
 
       <section class="card" aria-labelledby="h-board">
-        <h2 id="h-board">Board</h2>
+        <div class="presets-head">
+          <h2 id="h-board">Board</h2>
+          <button type="button" class="btn-small" id="surpriseBtn">Surprise me</button>
+        </div>
+        <p class="hint hidden" id="surpriseNote" aria-live="polite"></p>
         <fieldset>
           <legend>Map</legend>
           <div class="chips map-chips" id="mapChips"></div>
@@ -442,7 +458,7 @@ html.standalone main { padding-bottom: calc(150px + env(safe-area-inset-bottom))
     </ol>
     <button type="button" class="reset" id="installHide">Hide this</button>
   </details>
-  <p class="version" id="version">v5.1</p>
+  <p class="version" id="version">v5.2</p>
 </main>
 
 <div class="bar">
@@ -501,9 +517,13 @@ html.standalone main { padding-bottom: calc(150px + env(safe-area-inset-bottom))
     { id: "castle",  short: "Rainbow Castle", full: "Mario's Rainbow Castle",  compact: "Rainbow Castle" }
   ];
   var TURNS = [10, 15, 20, 25, 30];
+  // Playable characters in Super Mario Party Jamboree
+  var CHARACTERS = ["Mario", "Luigi", "Peach", "Daisy", "Wario", "Waluigi", "Yoshi", "Toadette",
+    "Toad", "Rosalina", "Donkey Kong", "Birdo", "Bowser", "Goomba", "Shy Guy", "Koopa Troopa",
+    "Monty Mole", "Bowser Jr.", "Boo", "Spike", "Pauline", "Ninji"];
   var KEY = "jamboree-request-v1";
   var DEFAULTS = {
-    status: "looking", need: 2, taken: "", map: "mall", turns: "15",
+    status: "looking", need: 2, taken: "", takenList: [], map: "mall", turns: "15",
     bonus: true, help: false, motion: false, mg: "Vote",
     noTeam: false, noQuit: false, extra: "", roomId: "", chat: "", style: "compact"
   };
@@ -528,6 +548,26 @@ html.standalone main { padding-bottom: calc(150px + env(safe-area-inset-bottom))
     turnBox.appendChild(l);
   });
 
+  var charBox = $("charChips");
+  CHARACTERS.forEach(function (c, i) {
+    var l = document.createElement("label");
+    l.className = "chip";
+    l.innerHTML = '<input type="checkbox" name="char" id="char-' + i + '"><span></span>';
+    l.querySelector("input").value = c;
+    l.querySelector("span").textContent = c;
+    charBox.appendChild(l);
+  });
+  function selectedChars() {
+    return Array.prototype.map.call(form.querySelectorAll('input[name="char"]:checked'), function (el) { return el.value; });
+  }
+  function setChars(list) {
+    list = list || [];
+    Array.prototype.forEach.call(form.querySelectorAll('input[name="char"]'), function (el) {
+      el.checked = list.indexOf(el.value) >= 0;
+    });
+  }
+  $("takenClear").addEventListener("click", function () { setChars([]); $("taken").value = ""; update(); });
+
   var need = 2;
   function setNeed(n) {
     need = Math.max(1, Math.min(3, n));
@@ -549,7 +589,7 @@ html.standalone main { padding-bottom: calc(150px + env(safe-area-inset-bottom))
 
   function read() {
     return {
-      status: radio("status"), need: need, taken: $("taken").value,
+      status: radio("status"), need: need, taken: $("taken").value, takenList: selectedChars(),
       map: radio("map"), turns: radio("turns"),
       bonus: $("bonus").checked, help: $("help").checked, motion: $("motion").checked,
       mg: radio("mg"), noTeam: $("noTeam").checked, noQuit: $("noQuit").checked,
@@ -558,7 +598,7 @@ html.standalone main { padding-bottom: calc(150px + env(safe-area-inset-bottom))
     };
   }
   function apply(s) {
-    setRadio("status", s.status); setNeed(s.need); $("taken").value = s.taken;
+    setRadio("status", s.status); setNeed(s.need); $("taken").value = s.taken; setChars(s.takenList);
     setRadio("map", s.map); setRadio("turns", s.turns);
     $("bonus").checked = s.bonus; $("help").checked = s.help; $("motion").checked = s.motion;
     setRadio("mg", s.mg); $("noTeam").checked = s.noTeam; $("noQuit").checked = s.noQuit;
@@ -580,7 +620,7 @@ html.standalone main { padding-bottom: calc(150px + env(safe-area-inset-bottom))
     var lines = [];
     if (s.status === "looking") {
       var head = "Looking for " + s.need;
-      var taken = joinNames(s.taken);
+      var taken = joinNames((s.takenList || []).concat([s.taken]).filter(Boolean).join(", "));
       if (taken) head += ", " + taken + " Taken";
       lines.push(head);
     } else if (s.status === "full") {
@@ -639,6 +679,7 @@ html.standalone main { padding-bottom: calc(150px + env(safe-area-inset-bottom))
       .replace("\u0000", '<span class="missing">add your Room ID</span>');
     if (s.roomId.trim()) $("idError").classList.add("hidden");
     $("bumpBtn").classList.toggle("hidden", s.status !== "looking");
+    $("takenClear").classList.toggle("hidden", !(s.takenList.length || s.taken.trim()));
     try { localStorage.setItem(KEY, JSON.stringify(s)); } catch (e) {}
     markActivePreset(s);
   }
@@ -692,6 +733,27 @@ html.standalone main { padding-bottom: calc(150px + env(safe-area-inset-bottom))
     });
   });
 
+  $("surpriseBtn").addEventListener("click", function () {
+    var boards = MAPS.filter(function (m) { return m.id !== "any"; });
+    var cur = read();
+    var m, t, tries = 0;
+    do {
+      m = boards[Math.floor(Math.random() * boards.length)];
+      t = TURNS[Math.floor(Math.random() * TURNS.length)];
+      tries++;
+    } while (m.id === cur.map && String(t) === cur.turns && tries < 10);
+    setRadio("map", m.id); setRadio("turns", String(t));
+    update();
+    var note = $("surpriseNote");
+    note.textContent = "Picked " + m.full.replace("From Mario Party 2", "Western Land") + " with " + t + " turns.";
+    note.classList.remove("hidden");
+    [$("map-" + m.id), $("turns-" + t)].forEach(function (inp) {
+      var span = inp && inp.nextElementSibling;
+      if (!span) return;
+      span.classList.remove("surprise-pop"); void span.offsetWidth; span.classList.add("surprise-pop");
+    });
+  });
+
   $("reset").addEventListener("click", function () { apply(DEFAULTS); update(); });
 
   $("roomId").addEventListener("input", function () {
@@ -701,6 +763,9 @@ html.standalone main { padding-bottom: calc(150px + env(safe-area-inset-bottom))
   });
   form.addEventListener("input", update);
   form.addEventListener("change", update);
+  form.addEventListener("change", function (e) {
+    if (e.target && (e.target.name === "map" || e.target.name === "turns")) $("surpriseNote").classList.add("hidden");
+  });
   form.addEventListener("submit", function (e) { e.preventDefault(); });
 
   /* ---------- Presets + share links ---------- */
@@ -744,7 +809,7 @@ html.standalone main { padding-bottom: calc(150px + env(safe-area-inset-bottom))
     var s = read();
     var c = cleanSettings(settings);
     PRESET_FIELDS.forEach(function (k) { s[k] = c[k]; });
-    s.status = "looking"; s.roomId = ""; s.taken = "";
+    s.status = "looking"; s.roomId = ""; s.taken = ""; s.takenList = [];
     apply(s);
     update();
   }
