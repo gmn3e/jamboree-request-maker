@@ -342,16 +342,25 @@ html.standalone main { padding-bottom: calc(150px + env(safe-area-inset-bottom))
           <legend>Map</legend>
           <div class="chips map-chips" id="mapChips"></div>
         </fieldset>
-        <fieldset>
+        <fieldset id="turnsField">
           <legend>Turns</legend>
           <div class="chips" id="turnChips"></div>
         </fieldset>
+        <p class="hint hidden" id="turnsPro">Turns: <b>12</b> (fixed by Pro Rules)</p>
       </section>
 
       <section class="card" aria-labelledby="h-rules">
         <h2 id="h-rules">Rules</h2>
+        <fieldset>
+          <legend>Game rules</legend>
+          <div class="chips">
+            <label class="chip"><input type="radio" name="rules" id="rules-party" value="party" checked><span>Party Rules</span></label>
+            <label class="chip"><input type="radio" name="rules" id="rules-pro" value="pro"><span>Pro Rules<small>12 turns, set by the game</small></span></label>
+          </div>
+          <p class="hint hidden" id="proNote">Pro Rules fixes the game at 12 turns and sets Bonus Stars and minigame voting itself, so those options are hidden.</p>
+        </fieldset>
         <div class="toggles">
-          <label class="toggle" for="bonus">
+          <label class="toggle" for="bonus" id="bonusRow">
             <span class="t-name">Bonus Stars</span>
             <span class="switch"><input type="checkbox" id="bonus" checked><i></i></span>
           </label>
@@ -364,7 +373,7 @@ html.standalone main { padding-bottom: calc(150px + env(safe-area-inset-bottom))
             <span class="switch"><input type="checkbox" id="motion"><i></i></span>
           </label>
         </div>
-        <fieldset>
+        <fieldset id="mgField">
           <legend>Minigame choice</legend>
           <div class="chips">
             <label class="chip"><input type="radio" name="mg" id="mg-vote" value="Vote" checked><span>Vote</span></label>
@@ -459,7 +468,7 @@ html.standalone main { padding-bottom: calc(150px + env(safe-area-inset-bottom))
     </ol>
     <button type="button" class="reset" id="installHide">Hide this</button>
   </details>
-  <p class="version" id="version">v5.3</p>
+  <p class="version" id="version">v5.4</p>
 </main>
 
 <div class="bar">
@@ -524,7 +533,7 @@ html.standalone main { padding-bottom: calc(150px + env(safe-area-inset-bottom))
     "Monty Mole", "Bowser Jr.", "Boo", "Spike", "Pauline", "Ninji"];
   var KEY = "jamboree-request-v1";
   var DEFAULTS = {
-    status: "looking", need: 2, taken: "", takenList: [], map: "mall", turns: "15",
+    status: "looking", need: 2, taken: "", takenList: [], rules: "party", map: "mall", turns: "15",
     bonus: true, help: false, motion: false, mg: "Vote",
     noTeam: false, noQuit: false, extra: "", roomId: "", chat: "", style: "compact"
   };
@@ -612,7 +621,7 @@ html.standalone main { padding-bottom: calc(150px + env(safe-area-inset-bottom))
   function read() {
     return {
       status: radio("status"), need: need, taken: $("taken").value, takenList: selectedChars(),
-      map: radio("map"), turns: radio("turns"),
+      rules: radio("rules") || "party", map: radio("map"), turns: radio("turns"),
       bonus: $("bonus").checked, help: $("help").checked, motion: $("motion").checked,
       mg: radio("mg"), noTeam: $("noTeam").checked, noQuit: $("noQuit").checked,
       extra: $("extra").value, roomId: $("roomId").value, chat: $("chat").value,
@@ -621,7 +630,7 @@ html.standalone main { padding-bottom: calc(150px + env(safe-area-inset-bottom))
   }
   function apply(s) {
     setRadio("status", s.status); setNeed(s.need); $("taken").value = s.taken; setChars(s.takenList);
-    setRadio("map", s.map); setRadio("turns", s.turns);
+    setRadio("rules", s.rules || "party"); setRadio("map", s.map); setRadio("turns", s.turns);
     $("bonus").checked = s.bonus; $("help").checked = s.help; $("motion").checked = s.motion;
     setRadio("mg", s.mg); $("noTeam").checked = s.noTeam; $("noQuit").checked = s.noQuit;
     $("extra").value = s.extra; $("roomId").value = s.roomId; $("chat").value = s.chat;
@@ -652,20 +661,24 @@ html.standalone main { padding-bottom: calc(150px + env(safe-area-inset-bottom))
     }
 
     var map = MAPS.filter(function (m) { return m.id === s.map; })[0] || MAPS[0];
+    var pro = s.rules === "pro";
+    var turns = pro ? "12" : s.turns;
     if (s.style === "labels") {
+      if (pro) lines.push("Rules: Pro");
       lines.push("Map: " + (map.id === "any" ? "any" : map.short));
-      lines.push("Turns: " + s.turns);
-      lines.push("Bonus Stars: " + onOff(s.bonus));
+      lines.push("Turns: " + turns);
+      if (!pro) lines.push("Bonus Stars: " + onOff(s.bonus));
       lines.push("Help: " + onOff(s.help));
       lines.push("Motion: " + onOff(s.motion));
-      lines.push("Minigames: " + s.mg);
+      if (!pro) lines.push("Minigames: " + s.mg);
     } else {
+      if (pro) lines.push("Pro Rules");
       lines.push(map.compact);
-      lines.push(s.turns + " Turns");
-      lines.push("Bonus " + onOff(s.bonus));
+      lines.push(turns + " Turns");
+      if (!pro) lines.push("Bonus " + onOff(s.bonus));
       lines.push("Help " + onOff(s.help));
       lines.push("Motion " + onOff(s.motion));
-      lines.push("Minigame " + s.mg);
+      if (!pro) lines.push("Minigame " + s.mg);
     }
 
     if (s.noTeam && s.noQuit) lines.push("No teaming up or quitting");
@@ -703,6 +716,10 @@ html.standalone main { padding-bottom: calc(150px + env(safe-area-inset-bottom))
     $("bumpBtn").classList.toggle("hidden", s.status !== "looking");
     $("takenClear").classList.toggle("hidden", !(s.takenList.length || s.taken.trim()));
     applyCharLimit(s);
+    var isPro = s.rules === "pro";
+    ["turnsField", "bonusRow", "mgField"].forEach(function (id) { $(id).classList.toggle("hidden", isPro); });
+    $("turnsPro").classList.toggle("hidden", !isPro);
+    $("proNote").classList.toggle("hidden", !isPro);
     try { localStorage.setItem(KEY, JSON.stringify(s)); } catch (e) {}
     markActivePreset(s);
   }
@@ -764,11 +781,14 @@ html.standalone main { padding-bottom: calc(150px + env(safe-area-inset-bottom))
       m = boards[Math.floor(Math.random() * boards.length)];
       t = TURNS[Math.floor(Math.random() * TURNS.length)];
       tries++;
-    } while (m.id === cur.map && String(t) === cur.turns && tries < 10);
-    setRadio("map", m.id); setRadio("turns", String(t));
+    } while (m.id === cur.map && (cur.rules === "pro" || String(t) === cur.turns) && tries < 10);
+    var proNow = cur.rules === "pro";
+    setRadio("map", m.id);
+    if (!proNow) setRadio("turns", String(t));
     update();
     var note = $("surpriseNote");
-    note.textContent = "Picked " + m.full.replace("From Mario Party 2", "Western Land") + " with " + t + " turns.";
+    var boardName = m.full.replace("From Mario Party 2", "Western Land");
+    note.textContent = proNow ? "Picked " + boardName + "." : "Picked " + boardName + " with " + t + " turns.";
     note.classList.remove("hidden");
     [$("map-" + m.id), $("turns-" + t)].forEach(function (inp) {
       var span = inp && inp.nextElementSibling;
@@ -794,7 +814,7 @@ html.standalone main { padding-bottom: calc(150px + env(safe-area-inset-bottom))
   /* ---------- Presets + share links ---------- */
   var PRESET_KEY = "jamboree-presets-v1";
   var MAX_PRESETS = 6;
-  var PRESET_FIELDS = ["map", "turns", "bonus", "help", "motion", "mg", "noTeam", "noQuit", "extra", "chat", "style"];
+  var PRESET_FIELDS = ["rules", "map", "turns", "bonus", "help", "motion", "mg", "noTeam", "noQuit", "extra", "chat", "style"];
   var presets = [];
   try {
     var rawP = JSON.parse(localStorage.getItem(PRESET_KEY) || "[]");
@@ -818,6 +838,7 @@ html.standalone main { padding-bottom: calc(150px + env(safe-area-inset-bottom))
   function cleanSettings(x) {
     var o = {};
     PRESET_FIELDS.forEach(function (k) { o[k] = x && x[k] !== undefined ? x[k] : DEFAULTS[k]; });
+    if (o.rules !== "pro") o.rules = "party";
     if (!MAPS.some(function (m) { return m.id === o.map; })) o.map = DEFAULTS.map;
     if (TURNS.indexOf(Number(o.turns)) < 0) o.turns = DEFAULTS.turns;
     o.turns = String(o.turns);
@@ -923,6 +944,7 @@ html.standalone main { padding-bottom: calc(150px + env(safe-area-inset-bottom))
     var c = cleanSettings(settings);
     var q = new URLSearchParams();
     if (name) q.set("name", name);
+    if (c.rules === "pro") q.set("rules_mode", "pro");
     q.set("map", c.map); q.set("turns", c.turns);
     q.set("bonus", c.bonus ? "1" : "0"); q.set("help", c.help ? "1" : "0"); q.set("motion", c.motion ? "1" : "0");
     q.set("mg", c.mg.toLowerCase());
@@ -940,6 +962,7 @@ html.standalone main { padding-bottom: calc(150px + env(safe-area-inset-bottom))
     return {
       name: (q.get("name") || "").slice(0, 24),
       settings: cleanSettings({
+        rules: q.get("rules_mode") === "pro" ? "pro" : "party",
         map: q.get("map"), turns: q.get("turns"),
         bonus: q.get("bonus") !== "0", help: q.get("help") === "1", motion: q.get("motion") === "1",
         mg: mg === "random" ? "Random" : "Vote",
