@@ -270,50 +270,22 @@ html.standalone main { padding-bottom: calc(150px + env(safe-area-inset-bottom))
     <p>Pick your settings, copy, and paste it into #jamboree-requests.</p>
   </header>
 
-  <section class="card presets" aria-labelledby="h-presets">
+  <div class="banner hidden" id="sharedBanner" role="status">
+    <span>Loaded a shared setup<b id="sharedName"></b>.</span>
+    <div class="banner-actions">
+      <button type="button" class="btn-small btn-accent" id="sharedSave">Save as preset</button>
+      <button type="button" class="link-btn" id="sharedDismiss">Dismiss</button>
+    </div>
+  </div>
+
+  <section class="card presets hidden" id="presetTop" aria-labelledby="h-presets">
     <div class="presets-head">
-      <h2 id="h-presets">Presets</h2>
+      <h2 id="h-presets">Your presets</h2>
       <button type="button" class="link-btn" id="presetEditBtn">Edit</button>
     </div>
-
-    <div class="banner hidden" id="sharedBanner" role="status">
-      <span>Loaded a shared setup<b id="sharedName"></b>.</span>
-      <div class="banner-actions">
-        <button type="button" class="btn-small btn-accent" id="sharedSave">Save as preset</button>
-        <button type="button" class="link-btn" id="sharedDismiss">Dismiss</button>
-      </div>
-    </div>
-
-    <p class="hint" id="presetEmpty">Save your usual setup here and load it with one tap.</p>
     <div class="chips" id="presetChips"></div>
-
-    <div class="preset-actions" id="presetActions">
-      <button type="button" class="btn-small" id="presetSaveBtn">Save as preset</button>
-      <button type="button" class="btn-small" id="shareBtn">Copy setup link</button>
-    </div>
-
-    <div class="preset-form hidden" id="presetForm">
-      <label for="presetName">Preset name</label>
-      <div class="row-input">
-        <input type="text" id="presetName" maxlength="24" placeholder="My usual" autocomplete="off">
-        <button type="button" class="btn-small btn-accent" id="presetSaveConfirm">Save</button>
-        <button type="button" class="link-btn" id="presetSaveCancel">Cancel</button>
-      </div>
-      <p class="hint">Saves the board, turns, rules, chat and layout. Room ID and taken characters aren't saved.</p>
-      <p class="error hidden" id="presetError"></p>
-    </div>
-
     <div class="preset-edit hidden" id="presetEdit">
       <div class="preset-rows" id="presetRows"></div>
-      <div class="field">
-        <label for="importLink">Paste a setup link</label>
-        <div class="row-input">
-          <input type="text" id="importLink" placeholder="https://gmn3e.github.io/jamboree-request-maker/?…" autocomplete="off" spellcheck="false">
-          <button type="button" class="btn-small" id="importBtn">Load</button>
-        </div>
-        <p class="error hidden" id="importError"></p>
-      </div>
-      <button type="button" class="btn-small btn-accent" id="presetDone">Done</button>
     </div>
   </section>
 
@@ -426,6 +398,33 @@ html.standalone main { padding-bottom: calc(150px + env(safe-area-inset-bottom))
       </section>
     </div>
   </form>
+  <section class="card presets" id="presetMenu" aria-labelledby="h-preset-menu">
+    <h2 id="h-preset-menu">Presets &amp; sharing</h2>
+    <p class="hint" id="presetMenuHint">Save your current setup to load it with one tap from the top of the page.</p>
+    <div class="preset-actions" id="presetActions">
+      <button type="button" class="btn-small" id="presetSaveBtn">Save as preset</button>
+      <button type="button" class="btn-small" id="shareBtn">Copy setup link</button>
+    </div>
+    <div class="preset-form hidden" id="presetForm">
+      <label for="presetName">Preset name</label>
+      <div class="row-input">
+        <input type="text" id="presetName" maxlength="24" placeholder="My usual" autocomplete="off">
+        <button type="button" class="btn-small btn-accent" id="presetSaveConfirm">Save</button>
+        <button type="button" class="link-btn" id="presetSaveCancel">Cancel</button>
+      </div>
+      <p class="hint">Saves the board, turns, rules, chat and layout. Room ID and taken characters aren't saved. Using an existing name updates that preset.</p>
+      <p class="error hidden" id="presetError"></p>
+    </div>
+    <div class="field">
+      <label for="importLink">Paste a setup link</label>
+      <div class="row-input">
+        <input type="text" id="importLink" placeholder="https://gmn3e.github.io/jamboree-request-maker/?…" autocomplete="off" spellcheck="false">
+        <button type="button" class="btn-small" id="importBtn">Load</button>
+      </div>
+      <p class="error hidden" id="importError"></p>
+    </div>
+  </section>
+
   <details class="card install hidden" id="install">
     <summary>
       <span class="install-title">Use it like an app</span>
@@ -443,7 +442,7 @@ html.standalone main { padding-bottom: calc(150px + env(safe-area-inset-bottom))
     </ol>
     <button type="button" class="reset" id="installHide">Hide this</button>
   </details>
-  <p class="version" id="version">v5.0</p>
+  <p class="version" id="version">v5.1</p>
 </main>
 
 <div class="bar">
@@ -770,8 +769,12 @@ html.standalone main { padding-bottom: calc(150px + env(safe-area-inset-bottom))
       b.addEventListener("click", function () { loadSettings(p.settings); });
       box.appendChild(b);
     });
-    $("presetEmpty").classList.toggle("hidden", presets.length > 0);
-    $("presetEditBtn").classList.toggle("hidden", presets.length === 0 && !editing);
+    if (!presets.length && editing) setEditing(false);
+    $("presetTop").classList.toggle("hidden", presets.length === 0);
+    box.classList.toggle("hidden", editing);
+    $("presetMenuHint").textContent = presets.length
+      ? "Your presets are at the top of the page. Save another, or share your current setup."
+      : "Save your current setup to load it with one tap from the top of the page.";
     markActivePreset();
     if (editing) renderEditRows();
   }
@@ -789,25 +792,18 @@ html.standalone main { padding-bottom: calc(150px + env(safe-area-inset-bottom))
       var inputId = "presetRename-" + i;
       row.innerHTML =
         '<label class="sr-only" for="' + inputId + '">Name of preset ' + (i + 1) + '</label>' +
-        '<input type="text" id="' + inputId + '" maxlength="24">' +
-        '<div class="row-btns">' +
-          '<button type="button" class="btn-small" data-act="overwrite">Update with current settings</button>' +
-          '<button type="button" class="btn-small" data-act="share">Copy link</button>' +
+        '<div class="row-input">' +
+          '<input type="text" id="' + inputId + '" maxlength="24">' +
           '<button type="button" class="btn-small danger" data-act="delete">Delete</button>' +
         '</div>';
       var input = row.querySelector("input");
       input.value = p.name;
-      input.addEventListener("change", function () {
+      // Rename as you type; empty names fall back to the old name
+      input.addEventListener("input", function () {
         var n = input.value.trim();
-        if (n) { p.name = n; savePresets(); renderPresets(); } else { input.value = p.name; }
+        if (n) { p.name = n.slice(0, 24); savePresets(); }
       });
-      row.querySelector('[data-act="overwrite"]').addEventListener("click", function () {
-        p.settings = pick(read()); savePresets(); markActivePreset(); flash(this, "Updated!");
-      });
-      row.querySelector('[data-act="share"]').addEventListener("click", function () {
-        var btn = this;
-        copyText(shareUrl(p.settings, p.name)).then(function (ok) { if (ok) flash(btn, "Link copied!"); });
-      });
+      input.addEventListener("blur", function () { if (!input.value.trim()) input.value = p.name; });
       var del = row.querySelector('[data-act="delete"]');
       del.addEventListener("click", function () {
         if (!del.classList.contains("armed")) {
@@ -816,6 +812,7 @@ html.standalone main { padding-bottom: calc(150px + env(safe-area-inset-bottom))
           return;
         }
         presets.splice(i, 1); savePresets(); renderPresets();
+        if (editing) { var first = $("presetRows").querySelector("input"); if (first) first.focus(); }
       });
       rows.appendChild(row);
     });
@@ -827,7 +824,7 @@ html.standalone main { padding-bottom: calc(150px + env(safe-area-inset-bottom))
     var existing = presets.filter(function (p) { return p.name.toLowerCase() === name.toLowerCase(); })[0];
     if (existing) { existing.settings = cleanSettings(settings); }
     else {
-      if (presets.length >= MAX_PRESETS) return "You can have up to " + MAX_PRESETS + " presets. Delete one in Edit first.";
+      if (presets.length >= MAX_PRESETS) return "You can have up to " + MAX_PRESETS + " presets. Delete one under Your presets \u2192 Edit first.";
       presets.push({ name: name, settings: cleanSettings(settings) });
     }
     savePresets(); renderPresets();
@@ -887,7 +884,7 @@ html.standalone main { padding-bottom: calc(150px + env(safe-area-inset-bottom))
     var err = addPreset($("presetName").value, pick(read()));
     if (err) { $("presetError").textContent = err; $("presetError").classList.remove("hidden"); return; }
     closeForm();
-    flash($("presetSaveBtn"), "Saved!");
+    flash($("presetSaveBtn"), "Saved! It's at the top");
   }
   $("presetSaveConfirm").addEventListener("click", confirmSave);
   $("presetName").addEventListener("keydown", function (e) { if (e.key === "Enter") { e.preventDefault(); confirmSave(); } });
@@ -900,14 +897,13 @@ html.standalone main { padding-bottom: calc(150px + env(safe-area-inset-bottom))
     });
   });
 
-  $("presetEditBtn").addEventListener("click", function () {
-    editing = !editing;
-    $("presetEdit").classList.toggle("hidden", !editing);
-    this.textContent = editing ? "Close" : "Edit";
-    $("importError").classList.add("hidden");
-    renderPresets();
-  });
-  $("presetDone").addEventListener("click", function () { $("presetEditBtn").click(); });
+  function setEditing(on) {
+    editing = on;
+    $("presetEdit").classList.toggle("hidden", !on);
+    $("presetEditBtn").textContent = on ? "Done" : "Edit";
+    $("presetChips").classList.toggle("hidden", on);
+  }
+  $("presetEditBtn").addEventListener("click", function () { setEditing(!editing); renderPresets(); });
 
   $("importBtn").addEventListener("click", function () {
     var raw = $("importLink").value.trim();
@@ -922,12 +918,13 @@ html.standalone main { padding-bottom: calc(150px + env(safe-area-inset-bottom))
     $("importLink").value = "";
     loadSettings(shared.settings);
     showShared(shared);
-    $("presetEditBtn").click();
+    $("sharedBanner").scrollIntoView({ block: "center", behavior: "smooth" });
   });
 
   $("sharedSave").addEventListener("click", function () {
     $("sharedBanner").classList.add("hidden");
     openForm(sharedPending ? sharedPending.name : "");
+    $("presetMenu").scrollIntoView({ block: "center", behavior: "smooth" });
   });
   $("sharedDismiss").addEventListener("click", function () { $("sharedBanner").classList.add("hidden"); });
 
