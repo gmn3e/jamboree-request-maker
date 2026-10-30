@@ -326,7 +326,7 @@ html.standalone main { padding-bottom: calc(150px + env(safe-area-inset-bottom))
       </section>
     </div>
   </form>
-  <p class="version" id="version">Version 4</p>
+  <p class="version" id="version">v4.0</p>
 </main>
 
 <div class="bar">
@@ -344,12 +344,6 @@ html.standalone main { padding-bottom: calc(150px + env(safe-area-inset-bottom))
       document.documentElement.classList.add("standalone");
     }
   } catch (e) {}
-  document.addEventListener("DOMContentLoaded", function () {
-    if (document.documentElement.classList.contains("standalone")) {
-      var v = document.getElementById("version");
-      if (v) v.textContent += " · home screen mode";
-    }
-  });
   var MAPS = [
     { id: "any",     short: "Any",            full: "Any board",               compact: "Any Map" },
     { id: "mall",    short: "Mall",           full: "Rainbow Galleria",        compact: "Mall" },
