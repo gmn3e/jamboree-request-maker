@@ -29,9 +29,9 @@ ID: WY9HB6
 **Board and rules**
 - All seven boards, 10–30 turns, or **Surprise me** for a random board and turn count
 - **Party Rules** or **Pro Rules**. With Pro Rules the game fixes 12 turns, the Bonus Star and minigame voting, so those options are hidden. Minigame Help and Motion minigames can still be set.
-- Bonus Stars, Minigame Help and Motion minigames on/off, minigame vote or random
+- Bonus Stars On, Classic (Event, Coin and Minigame Stars; the host needs Player Rank 10) or Off; Minigame Help and Motion minigames on/off; minigame vote or random
 - Your own extra rules or notes, one per line
-- Room ID and an optional chat channel
+- Room ID, an optional room passcode (switch it on only if the room has one) and an optional chat channel
 - Compact layout or "Label: value" layout
 
 **Presets and sharing**

@@ -466,11 +466,16 @@ header p { color: rgba(255,255,255,.88); }
           </div>
           <p class="hint hidden" id="proNote">Pro Rules fixes the game at 12 turns and sets Bonus Stars and minigame voting itself, so those options are hidden. Minigame Help and Motion can still be changed.</p>
         </fieldset>
+        <fieldset id="bonusRow">
+          <legend>Bonus Stars</legend>
+          <div class="chips">
+            <label class="chip"><input type="radio" name="bonus" id="bonus-on" value="on" checked><span>On</span></label>
+            <label class="chip"><input type="radio" name="bonus" id="bonus-classic" value="classic"><span>Classic<small>Event, Coin &amp; Minigame</small></span></label>
+            <label class="chip"><input type="radio" name="bonus" id="bonus-off" value="off"><span>Off</span></label>
+          </div>
+          <p class="hint hidden" id="classicNote">Classic has to be unlocked by the host (Player Rank 10).</p>
+        </fieldset>
         <div class="toggles">
-          <label class="toggle" for="bonus" id="bonusRow">
-            <span class="t-name">Bonus Stars</span>
-            <span class="switch"><input type="checkbox" id="bonus" checked><i></i></span>
-          </label>
           <label class="toggle" for="help" id="helpRow">
             <span class="t-name">Minigame Help<small>Explanation before each minigame</small></span>
             <span class="switch"><input type="checkbox" id="help"><i></i></span>
@@ -499,6 +504,17 @@ header p { color: rgba(255,255,255,.88); }
           <label for="roomId">Room ID</label>
           <input type="text" id="roomId" maxlength="10" placeholder="WY9HB6" autocapitalize="characters" spellcheck="false">
           <p class="error hidden" id="idError">Add your Room ID so people can join.</p>
+        </div>
+        <div class="toggles">
+          <label class="toggle" for="hasPass">
+            <span class="t-name">Room has a passcode</span>
+            <span class="switch"><input type="checkbox" id="hasPass"><i></i></span>
+          </label>
+        </div>
+        <div class="field hidden" id="passField">
+          <label for="passcode">Passcode</label>
+          <input type="text" id="passcode" inputmode="numeric" pattern="[0-9]*" placeholder="1234" autocomplete="off" spellcheck="false">
+          <p class="error hidden" id="passError">Add the 4-digit passcode, or turn the switch off.</p>
         </div>
         <div class="field">
           <label for="chat">Voice/text channel <span class="hint">(optional)</span></label>
@@ -572,7 +588,7 @@ header p { color: rgba(255,255,255,.88); }
     <p>Fan-made tool, not affiliated with or endorsed by Nintendo. Super Mario Party Jamboree and character names are trademarks of Nintendo.</p>
     <p>No tracking or cookies. Your settings and presets stay on your device. Hosted on GitHub Pages, which keeps standard server logs (<a href="https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement" rel="noopener">GitHub privacy statement</a>).</p>
   </footer>
-  <p class="version" id="version">v6.3</p>
+  <p class="version" id="version">v6.4</p>
 </main>
 
 <div class="bar">
@@ -638,8 +654,8 @@ header p { color: rgba(255,255,255,.88); }
   var KEY = "jamboree-request-v1";
   var DEFAULTS = {
     status: "looking", need: 2, taken: "", takenList: [], rules: "party", map: "mall", turns: "15",
-    bonus: true, help: false, motion: false, mg: "Vote",
-    extra: "", roomId: "", chat: "", style: "compact"
+    bonus: "on", help: false, motion: false, mg: "Vote",
+    extra: "", roomId: "", hasPass: false, passcode: "", chat: "", style: "compact"
   };
 
   var $ = function (id) { return document.getElementById(id); };
@@ -751,18 +767,18 @@ header p { color: rgba(255,255,255,.88); }
     return {
       status: radio("status"), need: need, taken: $("taken").value, takenList: selectedChars(),
       rules: radio("rules") || "party", map: radio("map"), turns: radio("turns"),
-      bonus: $("bonus").checked, help: $("help").checked, motion: $("motion").checked,
+      bonus: radio("bonus") || "on", help: $("help").checked, motion: $("motion").checked,
       mg: radio("mg"),
-      extra: $("extra").value, roomId: $("roomId").value, chat: $("chat").value,
+      extra: $("extra").value, roomId: $("roomId").value, hasPass: $("hasPass").checked, passcode: $("passcode").value, chat: $("chat").value,
       style: radio("style")
     };
   }
   function apply(s) {
     setRadio("status", s.status); setNeed(s.need); $("taken").value = ""; setChars(s.takenList);
     setRadio("rules", s.rules || "party"); setRadio("map", s.map); setRadio("turns", s.turns);
-    $("bonus").checked = s.bonus; $("help").checked = s.help; $("motion").checked = s.motion;
+    setRadio("bonus", bonusMode(s.bonus)); $("help").checked = s.help; $("motion").checked = s.motion;
     setRadio("mg", s.mg);
-    $("extra").value = s.extra; $("roomId").value = s.roomId; $("chat").value = s.chat;
+    $("extra").value = s.extra; $("roomId").value = s.roomId; $("hasPass").checked = !!s.hasPass; $("passcode").value = s.passcode || ""; $("chat").value = s.chat;
     setRadio("style", s.style);
   }
 
@@ -775,6 +791,12 @@ header p { color: rgba(255,255,255,.88); }
     return parts.slice(0, -1).join(", ") + " & " + parts[parts.length - 1];
   }
   function onOff(b) { return b ? "On" : "Off"; }
+  // Bonus Stars: "on" | "classic" | "off" (older saves used true / false)
+  function bonusMode(v) {
+    if (v === "classic" || v === "off" || v === "on") return v;
+    return v === false ? "off" : "on";
+  }
+  function bonusText(v) { v = bonusMode(v); return v === "classic" ? "Classic" : v === "off" ? "Off" : "On"; }
 
   function build(s) {
     var lines = [];
@@ -797,7 +819,7 @@ header p { color: rgba(255,255,255,.88); }
       if (pro) lines.push("Rules: Pro");
       lines.push("Map: " + (map.id === "any" ? "any" : map.short));
       lines.push("Turns: " + turns);
-      if (!pro) lines.push("Bonus Stars: " + onOff(s.bonus));
+      if (!pro) lines.push("Bonus Stars: " + bonusText(s.bonus));
       lines.push("Minigame Help: " + onOff(help));
       lines.push("Motion: " + onOff(motion));
       if (!pro) lines.push("Minigames: " + s.mg);
@@ -805,7 +827,7 @@ header p { color: rgba(255,255,255,.88); }
       if (pro) lines.push("Pro Rules");
       lines.push(map.compact);
       lines.push(turns + " Turns");
-      if (!pro) lines.push("Bonus " + onOff(s.bonus));
+      if (!pro) lines.push(bonusMode(s.bonus) === "classic" ? "Classic Bonus Stars" : "Bonus " + bonusText(s.bonus));
       lines.push("Minigame Help " + onOff(help));
       lines.push("Motion " + onOff(motion));
       if (!pro) lines.push("Minigame " + s.mg);
@@ -816,6 +838,10 @@ header p { color: rgba(255,255,255,.88); }
 
     var id = s.roomId.trim().toUpperCase().replace(/\s+/g, "");
     lines.push("ID: " + (id || "\u0000"));
+    if (s.hasPass) {
+      var pass = String(s.passcode || "").replace(/\D/g, "").slice(0, 4);
+      lines.push("Passcode: " + (pass.length === 4 ? pass : "\u0001"));
+    }
 
     var chat = s.chat.trim();
     if (chat) {
@@ -838,11 +864,15 @@ header p { color: rgba(255,255,255,.88); }
     $("lookingBox").classList.toggle("hidden", s.status !== "looking");
     current = build(s);
     $("preview").innerHTML = escapeHtml(current)
-      .replace("\u0000", '<span class="missing">add your Room ID</span>');
+      .replace("\u0000", '<span class="missing">add your Room ID</span>')
+      .replace("\u0001", '<span class="missing">add the 4-digit passcode</span>');
     if (s.roomId.trim()) $("idError").classList.add("hidden");
     $("bumpBtn").classList.toggle("hidden", s.status !== "looking");
     $("takenClear").disabled = !(s.takenList.length || s.taken.trim());
     applyCharLimit(s);
+    $("passField").classList.toggle("hidden", !s.hasPass);
+    if (!s.hasPass || /^\d{4}$/.test(s.passcode)) $("passError").classList.add("hidden");
+    $("classicNote").classList.toggle("hidden", bonusMode(s.bonus) !== "classic");
     var isPro = s.rules === "pro";
     ["turnsField", "bonusRow", "mgField"].forEach(function (id) { $(id).classList.toggle("hidden", isPro); });
     $("turnsPro").classList.toggle("hidden", !isPro);
@@ -879,6 +909,12 @@ header p { color: rgba(255,255,255,.88); }
   }
 
   $("copyBtn").addEventListener("click", function () {
+    if ($("hasPass").checked && !/^\d{4}$/.test($("passcode").value)) {
+      $("passError").classList.remove("hidden");
+      $("passcode").focus();
+      $("passcode").scrollIntoView({ block: "center", behavior: "smooth" });
+      return;
+    }
     if (!$("roomId").value.trim()) {
       $("idError").classList.remove("hidden");
       $("roomId").focus();
@@ -926,6 +962,13 @@ header p { color: rgba(255,255,255,.88); }
 
   $("reset").addEventListener("click", function () { apply(DEFAULTS); update(); });
 
+  $("passcode").addEventListener("input", function () {
+    var v = this.value.replace(/\D/g, "").slice(0, 4);
+    if (v !== this.value) this.value = v;
+  });
+  $("hasPass").addEventListener("change", function () {
+    if (this.checked) setTimeout(function () { $("passcode").focus(); }, 0);
+  });
   $("roomId").addEventListener("input", function () {
     var pos = this.selectionStart;
     this.value = this.value.toUpperCase();
@@ -971,7 +1014,8 @@ header p { color: rgba(255,255,255,.88); }
     o.turns = String(o.turns);
     if (o.mg !== "Vote" && o.mg !== "Random") o.mg = DEFAULTS.mg;
     if (o.style !== "compact" && o.style !== "labels") o.style = DEFAULTS.style;
-    ["bonus", "help", "motion"].forEach(function (k) { o[k] = !!o[k]; });
+    o.bonus = bonusMode(o.bonus);
+    ["help", "motion"].forEach(function (k) { o[k] = !!o[k]; });
     o.extra = String(o.extra || "").slice(0, 300);
     o.chat = String(o.chat || "").slice(0, 60);
     return o;
@@ -980,7 +1024,7 @@ header p { color: rgba(255,255,255,.88); }
     var s = read();
     var c = cleanSettings(settings);
     PRESET_FIELDS.forEach(function (k) { s[k] = c[k]; });
-    s.status = "looking"; s.roomId = ""; s.taken = ""; s.takenList = [];
+    s.status = "looking"; s.roomId = ""; s.taken = ""; s.takenList = []; s.hasPass = false; s.passcode = "";
     apply(s);
     update();
   }
@@ -1073,7 +1117,7 @@ header p { color: rgba(255,255,255,.88); }
     if (name) q.set("name", name);
     if (c.rules === "pro") q.set("rules_mode", "pro");
     q.set("map", c.map); q.set("turns", c.turns);
-    q.set("bonus", c.bonus ? "1" : "0"); q.set("help", c.help ? "1" : "0"); q.set("motion", c.motion ? "1" : "0");
+    q.set("bonus", c.bonus === "classic" ? "classic" : c.bonus === "off" ? "0" : "1"); q.set("help", c.help ? "1" : "0"); q.set("motion", c.motion ? "1" : "0");
     q.set("mg", c.mg.toLowerCase());
     if (c.style !== "compact") q.set("style", c.style);
     if (c.chat.trim()) q.set("chat", c.chat.trim());
@@ -1089,7 +1133,7 @@ header p { color: rgba(255,255,255,.88); }
       settings: cleanSettings({
         rules: q.get("rules_mode") === "pro" ? "pro" : "party",
         map: q.get("map"), turns: q.get("turns"),
-        bonus: q.get("bonus") !== "0", help: q.get("help") === "1", motion: q.get("motion") === "1",
+        bonus: q.get("bonus") === "classic" ? "classic" : q.get("bonus") === "0" ? "off" : "on", help: q.get("help") === "1", motion: q.get("motion") === "1",
         mg: mg === "random" ? "Random" : "Vote",
         style: q.get("style") || "compact", chat: q.get("chat") || "", extra: q.get("rules") || ""
       })
