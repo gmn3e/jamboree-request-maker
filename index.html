@@ -154,6 +154,7 @@ input::placeholder, textarea::placeholder { color: var(--muted); opacity: .8; }
 .hint { color: var(--muted); font-size: 0.82rem; margin: 0; }
 .error { color: var(--warn); font-weight: 700; font-size: 0.85rem; margin: 0; }
 .hidden { display: none !important; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
 
 /* Discord-style preview stays in Discord's dark look in both themes */
 .preview {
@@ -193,6 +194,41 @@ html.standalone .bar {
   padding-bottom: max(34px, calc(10px + env(safe-area-inset-bottom)));
 }
 html.standalone main { padding-bottom: calc(150px + env(safe-area-inset-bottom)); }
+/* Presets */
+.presets-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.link-btn {
+  background: none; border: 0; padding: 6px 2px; font: inherit; font-weight: 700;
+  color: var(--muted); text-decoration: underline; cursor: pointer;
+}
+.link-btn:focus-visible, .btn-small:focus-visible, .pchip:focus-visible { outline: 2px solid var(--pop); outline-offset: 2px; }
+.btn-small {
+  font: inherit; font-weight: 800; font-size: 0.92rem; border-radius: 12px; cursor: pointer;
+  padding: 9px 14px; min-height: 40px; background: var(--chip); color: var(--ink); border: 1px solid var(--line);
+}
+.btn-small.btn-accent { background: var(--pop); color: var(--pop-ink); border-color: transparent; }
+.btn-small.done { background: #1f9d55; color: #fff; border-color: transparent; }
+.btn-small.danger { color: var(--warn); }
+.btn-small.danger.armed { background: var(--warn); color: #fff; border-color: transparent; }
+.preset-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.pchip {
+  font: inherit; font-weight: 700; min-height: 42px; padding: 8px 14px; border-radius: 999px;
+  background: var(--chip); color: var(--ink); border: 2px solid transparent; cursor: pointer;
+  max-width: 100%; overflow-wrap: anywhere; text-align: left;
+}
+.pchip.active { background: var(--accent); color: var(--accent-ink); }
+.preset-form, .preset-edit { display: grid; gap: 8px; }
+.preset-form > label, .preset-edit label { font-weight: 700; }
+.row-input { display: flex; gap: 8px; align-items: center; }
+.row-input input { flex: 1; min-width: 0; }
+.preset-rows { display: grid; gap: 10px; }
+.preset-row { display: grid; gap: 8px; padding-bottom: 10px; border-bottom: 1px solid var(--line); }
+.preset-row .row-btns { display: flex; flex-wrap: wrap; gap: 8px; }
+.banner {
+  display: grid; gap: 8px; padding: 10px 12px; border-radius: 12px;
+  background: color-mix(in srgb, var(--accent) 22%, var(--surface));
+}
+.banner-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+
 .install { gap: 10px; }
 .install summary {
   list-style: none; cursor: pointer; display: grid; gap: 2px;
@@ -233,6 +269,53 @@ html.standalone main { padding-bottom: calc(150px + env(safe-area-inset-bottom))
     <h1>Jamboree Request Maker</h1>
     <p>Pick your settings, copy, and paste it into #jamboree-requests.</p>
   </header>
+
+  <section class="card presets" aria-labelledby="h-presets">
+    <div class="presets-head">
+      <h2 id="h-presets">Presets</h2>
+      <button type="button" class="link-btn" id="presetEditBtn">Edit</button>
+    </div>
+
+    <div class="banner hidden" id="sharedBanner" role="status">
+      <span>Loaded a shared setup<b id="sharedName"></b>.</span>
+      <div class="banner-actions">
+        <button type="button" class="btn-small btn-accent" id="sharedSave">Save as preset</button>
+        <button type="button" class="link-btn" id="sharedDismiss">Dismiss</button>
+      </div>
+    </div>
+
+    <p class="hint" id="presetEmpty">Save your usual setup here and load it with one tap.</p>
+    <div class="chips" id="presetChips"></div>
+
+    <div class="preset-actions" id="presetActions">
+      <button type="button" class="btn-small" id="presetSaveBtn">Save as preset</button>
+      <button type="button" class="btn-small" id="shareBtn">Copy setup link</button>
+    </div>
+
+    <div class="preset-form hidden" id="presetForm">
+      <label for="presetName">Preset name</label>
+      <div class="row-input">
+        <input type="text" id="presetName" maxlength="24" placeholder="My usual" autocomplete="off">
+        <button type="button" class="btn-small btn-accent" id="presetSaveConfirm">Save</button>
+        <button type="button" class="link-btn" id="presetSaveCancel">Cancel</button>
+      </div>
+      <p class="hint">Saves the board, turns, rules, chat and layout. Room ID and taken characters aren't saved.</p>
+      <p class="error hidden" id="presetError"></p>
+    </div>
+
+    <div class="preset-edit hidden" id="presetEdit">
+      <div class="preset-rows" id="presetRows"></div>
+      <div class="field">
+        <label for="importLink">Paste a setup link</label>
+        <div class="row-input">
+          <input type="text" id="importLink" placeholder="https://gmn3e.github.io/jamboree-request-maker/?…" autocomplete="off" spellcheck="false">
+          <button type="button" class="btn-small" id="importBtn">Load</button>
+        </div>
+        <p class="error hidden" id="importError"></p>
+      </div>
+      <button type="button" class="btn-small btn-accent" id="presetDone">Done</button>
+    </div>
+  </section>
 
   <form id="form" autocomplete="off" novalidate>
     <div style="display:grid;gap:14px">
@@ -360,7 +443,7 @@ html.standalone main { padding-bottom: calc(150px + env(safe-area-inset-bottom))
     </ol>
     <button type="button" class="reset" id="installHide">Hide this</button>
   </details>
-  <p class="version" id="version">v4.3</p>
+  <p class="version" id="version">v5.0</p>
 </main>
 
 <div class="bar">
@@ -558,6 +641,7 @@ html.standalone main { padding-bottom: calc(150px + env(safe-area-inset-bottom))
     if (s.roomId.trim()) $("idError").classList.add("hidden");
     $("bumpBtn").classList.toggle("hidden", s.status !== "looking");
     try { localStorage.setItem(KEY, JSON.stringify(s)); } catch (e) {}
+    markActivePreset(s);
   }
 
   function copyText(text) {
@@ -620,6 +704,233 @@ html.standalone main { padding-bottom: calc(150px + env(safe-area-inset-bottom))
   form.addEventListener("change", update);
   form.addEventListener("submit", function (e) { e.preventDefault(); });
 
+  /* ---------- Presets + share links ---------- */
+  var PRESET_KEY = "jamboree-presets-v1";
+  var MAX_PRESETS = 6;
+  var PRESET_FIELDS = ["map", "turns", "bonus", "help", "motion", "mg", "noTeam", "noQuit", "extra", "chat", "style"];
+  var presets = [];
+  try {
+    var rawP = JSON.parse(localStorage.getItem(PRESET_KEY) || "[]");
+    if (Array.isArray(rawP)) presets = rawP.filter(function (p) { return p && typeof p.name === "string" && p.settings; });
+  } catch (e) {}
+  var editing = false;
+  var sharedPending = null;
+
+  function savePresets() {
+    try { localStorage.setItem(PRESET_KEY, JSON.stringify(presets)); } catch (e) {}
+  }
+  function pick(s) {
+    var o = {};
+    PRESET_FIELDS.forEach(function (k) { o[k] = s[k]; });
+    return o;
+  }
+  function sameSettings(a, b) {
+    return PRESET_FIELDS.every(function (k) { return String(a[k]) === String(b[k]); });
+  }
+  // Fill in anything missing or invalid from the defaults
+  function cleanSettings(x) {
+    var o = {};
+    PRESET_FIELDS.forEach(function (k) { o[k] = x && x[k] !== undefined ? x[k] : DEFAULTS[k]; });
+    if (!MAPS.some(function (m) { return m.id === o.map; })) o.map = DEFAULTS.map;
+    if (TURNS.indexOf(Number(o.turns)) < 0) o.turns = DEFAULTS.turns;
+    o.turns = String(o.turns);
+    if (o.mg !== "Vote" && o.mg !== "Random") o.mg = DEFAULTS.mg;
+    if (o.style !== "compact" && o.style !== "labels") o.style = DEFAULTS.style;
+    ["bonus", "help", "motion", "noTeam", "noQuit"].forEach(function (k) { o[k] = !!o[k]; });
+    o.extra = String(o.extra || "").slice(0, 300);
+    o.chat = String(o.chat || "").slice(0, 60);
+    return o;
+  }
+  function loadSettings(settings) {
+    var s = read();
+    var c = cleanSettings(settings);
+    PRESET_FIELDS.forEach(function (k) { s[k] = c[k]; });
+    s.status = "looking"; s.roomId = ""; s.taken = "";
+    apply(s);
+    update();
+  }
+
+  function markActivePreset(s) {
+    if (!presets) return;
+    var cur = pick(s || read());
+    var chips = $("presetChips") ? $("presetChips").children : [];
+    for (var i = 0; i < chips.length; i++) {
+      var on = presets[i] && sameSettings(cur, cleanSettings(presets[i].settings));
+      chips[i].classList.toggle("active", !!on);
+      chips[i].setAttribute("aria-pressed", on ? "true" : "false");
+    }
+  }
+
+  function renderPresets() {
+    var box = $("presetChips");
+    box.innerHTML = "";
+    presets.forEach(function (p, i) {
+      var b = document.createElement("button");
+      b.type = "button"; b.className = "pchip"; b.textContent = p.name;
+      b.addEventListener("click", function () { loadSettings(p.settings); });
+      box.appendChild(b);
+    });
+    $("presetEmpty").classList.toggle("hidden", presets.length > 0);
+    $("presetEditBtn").classList.toggle("hidden", presets.length === 0 && !editing);
+    markActivePreset();
+    if (editing) renderEditRows();
+  }
+
+  function renderEditRows() {
+    var rows = $("presetRows");
+    rows.innerHTML = "";
+    if (!presets.length) {
+      rows.innerHTML = '<p class="hint">No presets yet.</p>';
+      return;
+    }
+    presets.forEach(function (p, i) {
+      var row = document.createElement("div");
+      row.className = "preset-row";
+      var inputId = "presetRename-" + i;
+      row.innerHTML =
+        '<label class="sr-only" for="' + inputId + '">Name of preset ' + (i + 1) + '</label>' +
+        '<input type="text" id="' + inputId + '" maxlength="24">' +
+        '<div class="row-btns">' +
+          '<button type="button" class="btn-small" data-act="overwrite">Update with current settings</button>' +
+          '<button type="button" class="btn-small" data-act="share">Copy link</button>' +
+          '<button type="button" class="btn-small danger" data-act="delete">Delete</button>' +
+        '</div>';
+      var input = row.querySelector("input");
+      input.value = p.name;
+      input.addEventListener("change", function () {
+        var n = input.value.trim();
+        if (n) { p.name = n; savePresets(); renderPresets(); } else { input.value = p.name; }
+      });
+      row.querySelector('[data-act="overwrite"]').addEventListener("click", function () {
+        p.settings = pick(read()); savePresets(); markActivePreset(); flash(this, "Updated!");
+      });
+      row.querySelector('[data-act="share"]').addEventListener("click", function () {
+        var btn = this;
+        copyText(shareUrl(p.settings, p.name)).then(function (ok) { if (ok) flash(btn, "Link copied!"); });
+      });
+      var del = row.querySelector('[data-act="delete"]');
+      del.addEventListener("click", function () {
+        if (!del.classList.contains("armed")) {
+          del.classList.add("armed"); del.textContent = "Tap again to delete";
+          setTimeout(function () { del.classList.remove("armed"); del.textContent = "Delete"; }, 3000);
+          return;
+        }
+        presets.splice(i, 1); savePresets(); renderPresets();
+      });
+      rows.appendChild(row);
+    });
+  }
+
+  function addPreset(name, settings) {
+    name = name.trim();
+    if (!name) return "Give your preset a name.";
+    var existing = presets.filter(function (p) { return p.name.toLowerCase() === name.toLowerCase(); })[0];
+    if (existing) { existing.settings = cleanSettings(settings); }
+    else {
+      if (presets.length >= MAX_PRESETS) return "You can have up to " + MAX_PRESETS + " presets. Delete one in Edit first.";
+      presets.push({ name: name, settings: cleanSettings(settings) });
+    }
+    savePresets(); renderPresets();
+    return "";
+  }
+
+  function shareUrl(settings, name) {
+    var c = cleanSettings(settings);
+    var q = new URLSearchParams();
+    if (name) q.set("name", name);
+    q.set("map", c.map); q.set("turns", c.turns);
+    q.set("bonus", c.bonus ? "1" : "0"); q.set("help", c.help ? "1" : "0"); q.set("motion", c.motion ? "1" : "0");
+    q.set("mg", c.mg.toLowerCase());
+    if (c.noTeam) q.set("team", "0");
+    if (c.noQuit) q.set("quit", "0");
+    if (c.style !== "compact") q.set("style", c.style);
+    if (c.chat.trim()) q.set("chat", c.chat.trim());
+    if (c.extra.trim()) q.set("rules", c.extra.trim());
+    return location.origin + location.pathname + "?" + q.toString();
+  }
+  function parseShare(search) {
+    var q = new URLSearchParams(search);
+    if (!q.has("map") && !q.has("turns")) return null;
+    var mg = (q.get("mg") || "").toLowerCase();
+    return {
+      name: (q.get("name") || "").slice(0, 24),
+      settings: cleanSettings({
+        map: q.get("map"), turns: q.get("turns"),
+        bonus: q.get("bonus") !== "0", help: q.get("help") === "1", motion: q.get("motion") === "1",
+        mg: mg === "random" ? "Random" : "Vote",
+        noTeam: q.get("team") === "0", noQuit: q.get("quit") === "0",
+        style: q.get("style") || "compact", chat: q.get("chat") || "", extra: q.get("rules") || ""
+      })
+    };
+  }
+  function showShared(shared) {
+    sharedPending = shared;
+    $("sharedName").textContent = shared.name ? ": “" + shared.name + "”" : "";
+    $("sharedBanner").classList.remove("hidden");
+  }
+
+  function openForm(prefill) {
+    $("presetForm").classList.remove("hidden");
+    $("presetActions").classList.add("hidden");
+    $("presetError").classList.add("hidden");
+    $("presetName").value = prefill || "";
+    $("presetName").focus();
+  }
+  function closeForm() {
+    $("presetForm").classList.add("hidden");
+    $("presetActions").classList.remove("hidden");
+  }
+
+  $("presetSaveBtn").addEventListener("click", function () { openForm(""); });
+  $("presetSaveCancel").addEventListener("click", closeForm);
+  function confirmSave() {
+    var err = addPreset($("presetName").value, pick(read()));
+    if (err) { $("presetError").textContent = err; $("presetError").classList.remove("hidden"); return; }
+    closeForm();
+    flash($("presetSaveBtn"), "Saved!");
+  }
+  $("presetSaveConfirm").addEventListener("click", confirmSave);
+  $("presetName").addEventListener("keydown", function (e) { if (e.key === "Enter") { e.preventDefault(); confirmSave(); } });
+
+  $("shareBtn").addEventListener("click", function () {
+    var btn = this, s = read();
+    var match = presets.filter(function (p) { return sameSettings(pick(s), cleanSettings(p.settings)); })[0];
+    copyText(shareUrl(pick(s), match ? match.name : "")).then(function (ok) {
+      if (ok) flash(btn, "Link copied!");
+    });
+  });
+
+  $("presetEditBtn").addEventListener("click", function () {
+    editing = !editing;
+    $("presetEdit").classList.toggle("hidden", !editing);
+    this.textContent = editing ? "Close" : "Edit";
+    $("importError").classList.add("hidden");
+    renderPresets();
+  });
+  $("presetDone").addEventListener("click", function () { $("presetEditBtn").click(); });
+
+  $("importBtn").addEventListener("click", function () {
+    var raw = $("importLink").value.trim();
+    var shared = null;
+    try { shared = parseShare(new URL(raw).search); } catch (e) {}
+    if (!shared) {
+      $("importError").textContent = "That doesn't look like a setup link. Copy it with “Copy setup link” and paste the whole link.";
+      $("importError").classList.remove("hidden");
+      return;
+    }
+    $("importError").classList.add("hidden");
+    $("importLink").value = "";
+    loadSettings(shared.settings);
+    showShared(shared);
+    $("presetEditBtn").click();
+  });
+
+  $("sharedSave").addEventListener("click", function () {
+    $("sharedBanner").classList.add("hidden");
+    openForm(sharedPending ? sharedPending.name : "");
+  });
+  $("sharedDismiss").addEventListener("click", function () { $("sharedBanner").classList.add("hidden"); });
+
   var saved = null;
   try { saved = JSON.parse(localStorage.getItem(KEY) || "null"); } catch (e) {}
   var start = {};
@@ -628,6 +939,15 @@ html.standalone main { padding-bottom: calc(150px + env(safe-area-inset-bottom))
   });
   apply(start);
   update();
+  renderPresets();
+
+  // Opened from a setup link: load it, offer to save it, then tidy the address bar
+  var incoming = parseShare(location.search);
+  if (incoming) {
+    loadSettings(incoming.settings);
+    showShared(incoming);
+    try { history.replaceState(null, "", location.pathname); } catch (e) {}
+  }
 })();
 </script>
 </body>
