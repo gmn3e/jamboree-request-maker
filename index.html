@@ -492,6 +492,31 @@ input[type="text"] { min-height: var(--control-h); padding-top: 0; padding-botto
 .legal { text-align: left; padding: 0; }
 .legal p { text-wrap: pretty; }
 .version { text-align: left; }
+
+/* ---------- Character pop-up: even grid, checkboxes, alphabetical ---------- */
+.sheet { width: min(460px, calc(100% - 24px)); }
+.sheet-head { padding: 16px 16px 2px; }
+.sheet > .hint { padding: 0 16px; }
+.picked { margin: 6px 16px 0; padding: 8px 10px; border-radius: 6px; background: var(--chip); font-size: var(--fs-sm); font-weight: 600; color: var(--ink); }
+.picked.empty { color: var(--muted); font-weight: 400; }
+.sheet-body { padding: 12px 16px 14px; }
+.char-chips { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: repeat(11, auto); grid-auto-flow: column; gap: 6px; }
+.char-chips .chip { display: flex; }
+.char-chips .chip span {
+  flex: 1; flex-direction: row; justify-content: flex-start; align-items: center; gap: 8px;
+  min-height: var(--control-h); padding: 0 10px; font-size: var(--fs-md); line-height: 1.15;
+  border-radius: 5px; box-shadow: 0 2px 0 var(--edge-chip); text-align: left; overflow-wrap: anywhere;
+}
+.char-chips .chip span::before {
+  content: ""; flex: none; width: 16px; height: 16px; border-radius: 4px;
+  border: 2px solid var(--muted); background: transparent; box-sizing: border-box;
+}
+.char-chips .chip input:checked + span { box-shadow: 0 2px 0 var(--edge-accent); }
+.char-chips .chip input:checked + span::before {
+  border-color: #fff; background: #fff center / 12px 12px no-repeat
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2.2 6.3l2.4 2.4 5.2-5.4' fill='none' stroke='%235160e8' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+.char-chips .chip input:checked + span { animation: none; }
 </style>
 </head>
 <body>
@@ -560,6 +585,7 @@ input[type="text"] { min-height: var(--control-h); padding-top: 0; padding-botto
               <button type="button" class="sheet-close" id="closeChars" aria-label="Close">&times;</button>
             </div>
             <p class="hint" id="limitHint"></p>
+            <p class="picked" id="pickedLine" aria-live="polite"></p>
             <div class="sheet-body">
               <div class="chips char-chips" id="charChips" role="group" aria-labelledby="takenLabel"></div>
               <input type="hidden" id="taken" value="">
@@ -713,7 +739,7 @@ input[type="text"] { min-height: var(--control-h); padding-top: 0; padding-botto
     <p>Free fan tool, provided as is with no guarantees. Questions or ideas? <a href="https://github.com/gmn3e/jamboree-request-maker/issues" rel="noopener">Open an issue on GitHub</a>.</p>
     <p>No tracking or cookies. Your settings and presets stay on your device. Hosted on GitHub Pages, which keeps standard server logs (<a href="https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement" rel="noopener">GitHub privacy statement</a>).</p>
   </footer>
-  <p class="version" id="version">v7.1</p>
+  <p class="version" id="version">v7.2</p>
 </main>
 
 <div class="bar">
@@ -804,7 +830,10 @@ input[type="text"] { min-height: var(--control-h); padding-top: 0; padding-botto
   });
 
   var charBox = $("charChips");
-  CHARACTERS.forEach(function (c, i) {
+  var SELECT_ORDER = ["Mario", "Luigi", "Peach", "Daisy", "Wario", "Waluigi", "Yoshi", "Toadette", "Toad", "Rosalina", "Pauline",
+    "Donkey Kong", "Birdo", "Bowser", "Goomba", "Shy Guy", "Koopa Troopa", "Monty Mole", "Bowser Jr.", "Boo", "Spike", "Ninji"];
+  SELECT_ORDER.forEach(function (c) {
+    var i = CHARACTERS.indexOf(c);
     var l = document.createElement("label");
     l.className = "chip";
     l.innerHTML = '<input type="checkbox" name="char" id="char-' + i + '"><span></span>';
@@ -841,6 +870,8 @@ input[type="text"] { min-height: var(--control-h); padding-top: 0; padding-botto
       : "Up to " + limit + ".";
     var names = joinNames(s.takenList.concat([s.taken]).filter(Boolean).join(", "));
     $("takenSummary").textContent = names || "None chosen";
+    $("pickedLine").textContent = names ? "Picked: " + names : "Nobody picked yet";
+    $("pickedLine").classList.toggle("empty", !names);
     $("takenSummary").classList.toggle("empty", !names);
     $("openChars").textContent = names ? "Change" : "Choose";
     // Don't let "players needed" push the lobby over 4 either
