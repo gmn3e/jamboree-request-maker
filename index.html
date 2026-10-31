@@ -11,21 +11,12 @@
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
-<meta name="theme-color" content="#ffc21a">
-<link rel="preload" href="fonts/fredoka-latin-600-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="fonts/nunito-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
+<meta name="theme-color" content="#5160e8" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1e1f22" media="(prefers-color-scheme: dark)">
+<link rel="preload" href="fonts/chakra-petch-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/ibm-plex-sans-latin-500-normal.woff2" as="font" type="font/woff2" crossorigin>
 <style>
-/* Fonts served from this site (no Google requests) */
-@font-face { font-family: "Fredoka"; font-style: normal; font-weight: 500; font-display: swap; src: url("fonts/fredoka-latin-ext-500-normal.woff2") format("woff2"); unicode-range: U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF; }
-@font-face { font-family: "Fredoka"; font-style: normal; font-weight: 500; font-display: swap; src: url("fonts/fredoka-latin-500-normal.woff2") format("woff2"); unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
-@font-face { font-family: "Fredoka"; font-style: normal; font-weight: 600; font-display: swap; src: url("fonts/fredoka-latin-ext-600-normal.woff2") format("woff2"); unicode-range: U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF; }
-@font-face { font-family: "Fredoka"; font-style: normal; font-weight: 600; font-display: swap; src: url("fonts/fredoka-latin-600-normal.woff2") format("woff2"); unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
-@font-face { font-family: "Nunito"; font-style: normal; font-weight: 500; font-display: swap; src: url("fonts/nunito-latin-ext-500-normal.woff2") format("woff2"); unicode-range: U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF; }
-@font-face { font-family: "Nunito"; font-style: normal; font-weight: 500; font-display: swap; src: url("fonts/nunito-latin-500-normal.woff2") format("woff2"); unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
-@font-face { font-family: "Nunito"; font-style: normal; font-weight: 700; font-display: swap; src: url("fonts/nunito-latin-ext-700-normal.woff2") format("woff2"); unicode-range: U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF; }
-@font-face { font-family: "Nunito"; font-style: normal; font-weight: 700; font-display: swap; src: url("fonts/nunito-latin-700-normal.woff2") format("woff2"); unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
-@font-face { font-family: "Nunito"; font-style: normal; font-weight: 800; font-display: swap; src: url("fonts/nunito-latin-ext-800-normal.woff2") format("woff2"); unicode-range: U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF; }
-@font-face { font-family: "Nunito"; font-style: normal; font-weight: 800; font-display: swap; src: url("fonts/nunito-latin-800-normal.woff2") format("woff2"); unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
+/* Fonts served from this site (no Google requests): Chakra Petch + IBM Plex Sans */
 /* Layout: one phone-width column of settings, live Discord-style preview, sticky copy bar. */
 :root {
   /* Party Lobby: white-first; yellow = action, blue = selected, green = success */
@@ -44,8 +35,8 @@
   --success-ink: #0b1f12;
   --discord: #313338;
   --discord-ink: #dbdee1;
-  --font-display: "Fredoka", "Nunito", system-ui, sans-serif;
-  --font-body: "Nunito", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: "Chakra Petch", "IBM Plex Sans", system-ui, sans-serif;
+  --font-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
   color-scheme: light;
 }
 @media (prefers-color-scheme: dark) {
@@ -368,13 +359,96 @@ header p { color: rgba(255,255,255,.88); }
   .chip input:checked + span { animation: none; }
   .btn:active, .chip:active span, .pchip:active, .btn-small:active { transform: none; }
 }
+
+/* ---------- Hand-made pass: plainer header, flat panels, numbered steps ---------- */
+header.titlebar { background: none; color: var(--ink); box-shadow: none; border-radius: 0; padding: 4px 2px 2px;
+  display: flex; align-items: center; gap: 14px; overflow: visible; }
+header.titlebar::after { content: none; }
+header.titlebar h1 { color: var(--ink); font-size: 1.45rem; }
+header.titlebar p { color: var(--muted); margin-top: 2px; font-size: .92rem; }
+.brand-mark { width: 52px; height: 52px; flex: none; }
+.card { box-shadow: none; border-width: 1.5px; }
+.card h2::before { content: none; }
+.step { display: inline-grid; place-items: center; width: 26px; height: 26px; margin-right: 10px; border-radius: 8px;
+  background: var(--ink); color: var(--surface); font-family: var(--font-display); font-size: .9rem; font-weight: 600; vertical-align: 2px; }
+hr.split { border: 0; border-top: 1.5px dashed var(--line); margin: 6px 0 2px; width: 100%; }
+.field-label { font-weight: 700; }
+
+/* ---------- Crisper corners: small radii instead of soft pills ---------- */
+.card, .sheet, .install { border-radius: 8px; }
+.chip span, .map-chips .chip span, .char-chips .chip span, .pchip { border-radius: 5px; }
+.btn, .btn-small, .stepper, .stepper button, .char-summary, .char-summary .btn-small { border-radius: 6px; }
+input[type="text"], textarea, .preview, .ping-tip, .banner, .pro-help-note { border-radius: 6px; }
+.switch i { border-radius: 6px; }
+.switch i::after { border-radius: 4px; }
+.step { border-radius: 4px; }
+.sheet-close { border-radius: 6px; }
+.mention { border-radius: 3px; }
+.brand-mark rect:first-child { rx: 10; }
+
+/* ---------- Final look: Chakra Petch + IBM Plex Sans, Discord-inspired greys, blurple picks, yellow action ---------- */
+@font-face { font-family: "Chakra Petch"; font-style: normal; font-weight: 600; font-display: swap; src: url("fonts/chakra-petch-latin-ext-600-normal.woff2") format("woff2"); unicode-range: U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF; }
+@font-face { font-family: "Chakra Petch"; font-style: normal; font-weight: 600; font-display: swap; src: url("fonts/chakra-petch-latin-600-normal.woff2") format("woff2"); unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
+@font-face { font-family: "Chakra Petch"; font-style: normal; font-weight: 700; font-display: swap; src: url("fonts/chakra-petch-latin-ext-700-normal.woff2") format("woff2"); unicode-range: U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF; }
+@font-face { font-family: "Chakra Petch"; font-style: normal; font-weight: 700; font-display: swap; src: url("fonts/chakra-petch-latin-700-normal.woff2") format("woff2"); unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
+@font-face { font-family: "IBM Plex Sans"; font-style: normal; font-weight: 400; font-display: swap; src: url("fonts/ibm-plex-sans-latin-ext-400-normal.woff2") format("woff2"); unicode-range: U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF; }
+@font-face { font-family: "IBM Plex Sans"; font-style: normal; font-weight: 400; font-display: swap; src: url("fonts/ibm-plex-sans-latin-400-normal.woff2") format("woff2"); unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
+@font-face { font-family: "IBM Plex Sans"; font-style: normal; font-weight: 500; font-display: swap; src: url("fonts/ibm-plex-sans-latin-ext-500-normal.woff2") format("woff2"); unicode-range: U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF; }
+@font-face { font-family: "IBM Plex Sans"; font-style: normal; font-weight: 500; font-display: swap; src: url("fonts/ibm-plex-sans-latin-500-normal.woff2") format("woff2"); unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
+@font-face { font-family: "IBM Plex Sans"; font-style: normal; font-weight: 600; font-display: swap; src: url("fonts/ibm-plex-sans-latin-ext-600-normal.woff2") format("woff2"); unicode-range: U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF; }
+@font-face { font-family: "IBM Plex Sans"; font-style: normal; font-weight: 600; font-display: swap; src: url("fonts/ibm-plex-sans-latin-600-normal.woff2") format("woff2"); unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
+@font-face { font-family: "IBM Plex Sans"; font-style: normal; font-weight: 700; font-display: swap; src: url("fonts/ibm-plex-sans-latin-ext-700-normal.woff2") format("woff2"); unicode-range: U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF; }
+@font-face { font-family: "IBM Plex Sans"; font-style: normal; font-weight: 700; font-display: swap; src: url("fonts/ibm-plex-sans-latin-700-normal.woff2") format("woff2"); unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
+:root {
+  --font-display: "Chakra Petch", "IBM Plex Sans", system-ui, sans-serif;
+  --font-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --bg: #f2f3f5; --surface: #ffffff; --ink: #1e1f22; --muted: #4e5058; --line: #dfe1e5; --chip: #ebedef;
+  --accent: #5160e8; --accent-ink: #ffffff; --pop: #ffcc33; --pop-ink: #231a00; --warn: #c42b3a;
+  --success: #2bd67b; --success-ink: #05250f;
+  --edge-pop: #c49a12; --edge-accent: #3a47c4; --edge-success: #179a55; --edge-chip: #d0d3d8; --edge-card: #dfe1e5;
+  --discord: #313338; --discord-ink: #dbdee1;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+  --bg: #1e1f22; --surface: #2b2d31; --ink: #f2f3f5; --muted: #b5bac1; --line: #3f4147; --chip: #383a40;
+  --accent: #5160e8; --accent-ink: #ffffff; --pop: #ffcc33; --pop-ink: #231a00; --warn: #ff8c93;
+  --success: #2bd67b; --success-ink: #05250f;
+  --edge-pop: #a8820c; --edge-accent: #3a47c4; --edge-success: #179a55; --edge-chip: #17181b; --edge-card: #17181b;
+  --discord: #232428; --discord-ink: #dbdee1;
+  color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #1e1f22; --surface: #2b2d31; --ink: #f2f3f5; --muted: #b5bac1; --line: #3f4147; --chip: #383a40;
+  --accent: #5160e8; --accent-ink: #ffffff; --pop: #ffcc33; --pop-ink: #231a00; --warn: #ff8c93;
+  --success: #2bd67b; --success-ink: #05250f;
+  --edge-pop: #a8820c; --edge-accent: #3a47c4; --edge-success: #179a55; --edge-chip: #17181b; --edge-card: #17181b;
+  --discord: #232428; --discord-ink: #dbdee1;
+  color-scheme: dark;
+}
+.chip input:checked + span small { color: #f0f1ff; opacity: 1; }
+.preview { border: 1px solid var(--line); border-left: 4px solid var(--accent); }
+.step { background: var(--pop); color: var(--pop-ink); }
+h1, .card h2, .install-title, .sheet-head h3 { letter-spacing: 0; }
+
+/* Title bar: the icon's blurple tile stretches behind the title and subtitle */
+header.titlebar { background: var(--accent); color: #fff; border-radius: 8px; padding: 14px 16px; gap: 14px; position: relative; overflow: hidden; isolation: isolate; }
+header.titlebar::before { content: ""; position: absolute; z-index: -1; right: 10px; bottom: 10px; width: 30px; height: 30px;
+  background-image: radial-gradient(circle, rgba(255,255,255,.18) 2.2px, transparent 2.6px); background-size: 11px 11px; }
+header.titlebar h1 { color: #fff; }
+header.titlebar p { color: #e6e8ff; }
+.brand-mark { width: 50px; height: 50px; }
 </style>
 </head>
 <body>
 <main>
-  <header>
-    <h1>Jamboree Request Maker</h1>
-    <p>Pick your settings, copy, and paste it into #jamboree-requests.</p>
+  <header class="titlebar">
+    <svg class="brand-mark" viewBox="8 8 48 48" aria-hidden="true"><g transform="rotate(-10 32 32)"><rect x="14" y="17" width="36" height="36" rx="7" fill="#c49a12"/><rect x="14" y="13" width="36" height="36" rx="7" fill="#ffcc33"/><circle cx="23.5" cy="22.5" r="3.8" fill="#1e1f22"/><circle cx="40.5" cy="22.5" r="3.8" fill="#1e1f22"/><circle cx="32" cy="31" r="3.8" fill="#1e1f22"/><circle cx="23.5" cy="39.5" r="3.8" fill="#1e1f22"/><circle cx="40.5" cy="39.5" r="3.8" fill="#1e1f22"/></g></svg>
+    <div>
+      <h1>Jamboree Request Maker</h1>
+      <p>Fill it in, copy, paste into #jamboree-requests.</p>
+    </div>
   </header>
 
   <div class="banner hidden" id="sharedBanner" role="status">
@@ -400,7 +474,7 @@ header p { color: rgba(255,255,255,.88); }
     <div style="display:grid;gap:14px">
 
       <section class="card" aria-labelledby="h-lobby">
-        <h2 id="h-lobby">Lobby</h2>
+        <h2 id="h-lobby"><span class="step" aria-hidden="true">1</span>Lobby</h2>
         <fieldset>
           <legend>Status</legend>
           <div class="chips">
@@ -412,7 +486,7 @@ header p { color: rgba(255,255,255,.88); }
 
         <div id="lookingBox" style="display:grid;gap:14px">
           <div class="row">
-            <span class="label" style="margin:0">Players needed</span>
+            <span class="field-label">Players needed</span>
             <div class="stepper" role="group" aria-label="Players needed">
               <button type="button" id="needMinus" aria-label="One fewer">−</button>
               <output id="need" aria-live="polite">2</output>
@@ -420,7 +494,7 @@ header p { color: rgba(255,255,255,.88); }
             </div>
           </div>
           <div class="field">
-            <span class="field-label">Characters already taken <span class="hint">(optional)</span></span>
+            <span class="field-label">Characters already taken</span>
             <div class="char-summary">
               <span id="takenSummary" class="taken-summary">None chosen</span>
               <button type="button" class="btn-small" id="openChars" aria-haspopup="dialog">Choose</button>
@@ -447,8 +521,8 @@ header p { color: rgba(255,255,255,.88); }
 
       <section class="card" aria-labelledby="h-board">
         <div class="presets-head">
-          <h2 id="h-board">Board</h2>
-          <button type="button" class="btn-small" id="surpriseBtn">Surprise me</button>
+          <h2 id="h-board"><span class="step" aria-hidden="true">2</span>Board &amp; rules</h2>
+          <button type="button" class="btn-small" id="surpriseBtn">Random board</button>
         </div>
         <p class="hint hidden" id="surpriseNote" aria-live="polite"></p>
         <fieldset>
@@ -460,17 +534,15 @@ header p { color: rgba(255,255,255,.88); }
           <div class="chips" id="turnChips"></div>
         </fieldset>
         <p class="hint hidden" id="turnsPro">Turns: <b>12</b> (fixed by Pro Rules)</p>
-      </section>
-
-      <section class="card" aria-labelledby="h-rules">
-        <h2 id="h-rules">Rules</h2>
+        <hr class="split">
+        <span class="sr-only" id="h-rules">Rules</span>
         <fieldset>
           <legend>Game rules</legend>
           <div class="chips">
             <label class="chip"><input type="radio" name="rules" id="rules-party" value="party" checked><span>Party Rules</span></label>
-            <label class="chip"><input type="radio" name="rules" id="rules-pro" value="pro"><span>Pro Rules<small>12 turns, set by the game</small></span></label>
+            <label class="chip"><input type="radio" name="rules" id="rules-pro" value="pro"><span>Pro Rules<small>12 turns</small></span></label>
           </div>
-          <p class="hint hidden" id="proNote">Pro Rules fixes the game at 12 turns and sets Bonus Stars and minigame voting itself, so those options are hidden. Minigame Help and Motion can still be changed.</p>
+          <p class="hint hidden" id="proNote">The game sets turns, Bonus Stars and minigame choice in Pro Rules.</p>
         </fieldset>
         <fieldset id="bonusRow">
           <legend>Bonus Stars</legend>
@@ -479,11 +551,11 @@ header p { color: rgba(255,255,255,.88); }
             <label class="chip"><input type="radio" name="bonus" id="bonus-classic" value="classic"><span>Classic<small>Event, Coin &amp; Minigame</small></span></label>
             <label class="chip"><input type="radio" name="bonus" id="bonus-off" value="off"><span>Off</span></label>
           </div>
-          <p class="hint hidden" id="classicNote">Classic has to be unlocked by the host (Player Rank 10).</p>
+          <p class="hint hidden" id="classicNote">The host needs Player Rank 10 for Classic.</p>
         </fieldset>
         <div class="toggles">
           <label class="toggle" for="help" id="helpRow">
-            <span class="t-name">Minigame Help<small>Explanation before each minigame</small></span>
+            <span class="t-name">Minigame Help</span>
             <span class="switch"><input type="checkbox" id="help"><i></i></span>
           </label>
           <label class="toggle" for="motion" id="motionRow">
@@ -499,13 +571,13 @@ header p { color: rgba(255,255,255,.88); }
           </div>
         </fieldset>
         <div class="field">
-          <label for="extra">Anything else <span class="hint">(optional, one per line)</span></label>
+          <label for="extra">Anything else <span class="hint">(one per line)</span></label>
           <textarea id="extra" rows="2" placeholder="Chill game, new players welcome"></textarea>
         </div>
       </section>
 
       <section class="card" aria-labelledby="h-room">
-        <h2 id="h-room">Room</h2>
+        <h2 id="h-room"><span class="step" aria-hidden="true">3</span>Room</h2>
         <div class="field">
           <label for="roomId">Room ID</label>
           <input type="text" id="roomId" maxlength="10" placeholder="WY9HB6" autocapitalize="characters" spellcheck="false">
@@ -523,13 +595,13 @@ header p { color: rgba(255,255,255,.88); }
           <p class="error hidden" id="passError">Add the 4-digit passcode, or turn the switch off.</p>
         </div>
         <div class="field">
-          <label for="chat">Voice/text channel <span class="hint">(optional)</span></label>
+          <label for="chat">Voice/text channel</label>
           <input type="text" id="chat" placeholder="#tropical-room" spellcheck="false">
         </div>
       </section>
 
       <section class="card" aria-labelledby="h-preview">
-        <h2 id="h-preview">Preview</h2>
+        <h2 id="h-preview"><span class="step" aria-hidden="true">4</span>Preview</h2>
         <div class="preview" id="preview" aria-live="polite"></div>
         <div class="ping-tip">
           <span>After pasting, type <span class="mention">@Jamboree Matchmaking</span> and tap the role in Discord's list. Pasted text won't ping anyone.</span>
@@ -541,7 +613,7 @@ header p { color: rgba(255,255,255,.88); }
   </form>
   <section class="card presets" id="presetMenu" aria-labelledby="h-preset-menu">
     <h2 id="h-preset-menu">Presets &amp; sharing</h2>
-    <p class="hint" id="presetMenuHint">Save your current setup to load it with one tap from the top of the page.</p>
+    <p class="hint" id="presetMenuHint">Save this setup to reuse it later.</p>
     <div class="preset-actions" id="presetActions">
       <button type="button" class="btn-small" id="presetSaveBtn">Save as preset</button>
       <button type="button" class="btn-small" id="shareBtn">Copy setup link</button>
@@ -569,7 +641,7 @@ header p { color: rgba(255,255,255,.88); }
   <details class="card install hidden" id="install">
     <summary>
       <span class="install-title">Use it like an app</span>
-      <span class="install-sub">Add it to your home screen for one-tap access</span>
+      <span class="install-sub">Add it to your home screen</span>
     </summary>
     <ol class="install-steps hidden" id="stepsIos">
       <li>In Safari, tap the <b>Page Menu</b> button in the address bar, then tap <b>Share</b>. If your tabs are set to the Top or Bottom layout, tap <b>Share</b> <svg class="glyph" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 2v10M6 5.5 10 2l4 3.5M6 8H4.5v10h11V8H14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> directly.</li>
@@ -588,7 +660,7 @@ header p { color: rgba(255,255,255,.88); }
     <p>Free fan tool, provided as is with no guarantees. Questions or ideas? <a href="https://github.com/gmn3e/jamboree-request-maker/issues" rel="noopener">Open an issue on GitHub</a>.</p>
     <p>No tracking or cookies. Your settings and presets stay on your device. Hosted on GitHub Pages, which keeps standard server logs (<a href="https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement" rel="noopener">GitHub privacy statement</a>).</p>
   </footer>
-  <p class="version" id="version">v6.8</p>
+  <p class="version" id="version">v7.0</p>
 </main>
 
 <div class="bar">
@@ -1040,8 +1112,8 @@ header p { color: rgba(255,255,255,.88); }
     $("presetTop").classList.toggle("hidden", presets.length === 0);
     box.classList.toggle("hidden", editing);
     $("presetMenuHint").textContent = presets.length
-      ? "Your presets are at the top of the page. Save another, or share your current setup."
-      : "Save your current setup to load it with one tap from the top of the page.";
+      ? "Saved presets are at the top of the page."
+      : "Save this setup to reuse it later.";
     markActivePreset();
     if (editing) renderEditRows();
   }

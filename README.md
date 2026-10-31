@@ -27,7 +27,7 @@ ID: WY9HB6
 - Characters already taken: tap **Choose** to pick from all 22 characters in a pop-up. It won't let the lobby go over 4 players (taken characters + players still needed).
 
 **Board and rules**
-- All seven boards, 10–30 turns, or **Surprise me** for a random board and turn count
+- All seven boards, 10–30 turns, or **Random board** for a random board and turn count
 - **Party Rules** or **Pro Rules**. With Pro Rules the game fixes 12 turns, the Bonus Star and minigame voting, so those options are hidden. Minigame Help and Motion minigames can still be set.
 - Bonus Stars On, Classic (Event, Coin and Minigame Stars; the host needs Player Rank 10) or Off; Minigame Help and Motion minigames on/off; minigame vote or random
 - Your own extra rules or notes, one per line
@@ -44,7 +44,7 @@ ID: WY9HB6
 - The box is hidden when the page is opened from the home screen, can be hidden with **Hide this**, and on Android hides itself once the home-screen app has been opened.
 - Opened from the home screen, the page runs full-screen with the buttons kept clear of the rounded screen corners.
 
-Your last settings and presets are remembered in your own browser. The version number is shown at the bottom of the page.
+The page follows your device's light or dark setting. Your last settings and presets are remembered in your own browser. The version number is shown at the bottom of the page.
 
 ## Privacy
 
@@ -53,7 +53,7 @@ The page has no tracking, cookies, accounts or forms, and sends nothing you type
 ## Files
 
 - `index.html`: the whole page (HTML, CSS and JavaScript in one file)
-- `icon.svg`, `favicon-32.png`, `apple-touch-icon.png`: site and home-screen icons (original artwork)
-- `fonts/`: Fredoka and Nunito, from [Fontsource](https://fontsource.org), licensed under the SIL Open Font License 1.1 (see `fonts/OFL-*.txt`)
+- `icon.svg`, `favicon-32.png`, `apple-touch-icon.png`: site and home-screen icons (original artwork: a yellow five-pip die on a blurple tile)
+- `fonts/`: Chakra Petch and IBM Plex Sans, from [Fontsource](https://fontsource.org), licensed under the SIL Open Font License 1.1 (see `fonts/OFL-*.txt`)
 
 Fan-made tool, not affiliated with Nintendo. Super Mario Party Jamboree and character names are trademarks of Nintendo.

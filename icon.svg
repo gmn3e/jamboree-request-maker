@@ -1,18 +1,17 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <rect width="64" height="64" rx="14" fill="#1d63e0"/>
-  <!-- faint pip pattern, like the header -->
-  <g fill="#ffffff" opacity=".16">
+  <rect width="64" height="64" rx="14" fill="#5160e8"/>
+  <!-- faint pips in the corners -->
+  <g fill="#ffffff" opacity=".18">
     <circle cx="8" cy="8" r="1.6"/><circle cx="17" cy="8" r="1.6"/><circle cx="8" cy="17" r="1.6"/>
     <circle cx="56" cy="47" r="1.6"/><circle cx="56" cy="56" r="1.6"/><circle cx="47" cy="56" r="1.6"/>
   </g>
   <g transform="rotate(-10 32 32)">
-    <!-- chunky bottom edge, like the pressable buttons -->
-    <rect x="14" y="17" width="36" height="36" rx="9" fill="#c99400"/>
-    <rect x="14" y="13" width="36" height="36" rx="9" fill="#ffc21a"/>
-    <circle cx="23.5" cy="22.5" r="3.8" fill="#141a2a"/>
-    <circle cx="40.5" cy="22.5" r="3.8" fill="#141a2a"/>
-    <circle cx="32" cy="31" r="3.8" fill="#141a2a"/>
-    <circle cx="23.5" cy="39.5" r="3.8" fill="#141a2a"/>
-    <circle cx="40.5" cy="39.5" r="3.8" fill="#141a2a"/>
+    <rect x="14" y="17" width="36" height="36" rx="7" fill="#c49a12"/>
+    <rect x="14" y="13" width="36" height="36" rx="7" fill="#ffcc33"/>
+    <circle cx="23.5" cy="22.5" r="3.8" fill="#1e1f22"/>
+    <circle cx="40.5" cy="22.5" r="3.8" fill="#1e1f22"/>
+    <circle cx="32" cy="31" r="3.8" fill="#1e1f22"/>
+    <circle cx="23.5" cy="39.5" r="3.8" fill="#1e1f22"/>
+    <circle cx="40.5" cy="39.5" r="3.8" fill="#1e1f22"/>
   </g>
 </svg>
