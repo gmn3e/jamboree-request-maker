@@ -63,6 +63,12 @@
   color-scheme: dark;
 }
 * { box-sizing: border-box; }
+/* No grey flash box when tapping on phones; the pressed effect and keyboard focus ring stay */
+html { -webkit-tap-highlight-color: transparent; }
+*, *::before, *::after { -webkit-tap-highlight-color: transparent; }
+button, label, summary, a { -webkit-touch-callout: none; }
+/* A tap or click focuses the control without a ring; only keyboard focus shows one */
+:focus:not(:focus-visible) { outline: none; }
 html, body { margin: 0; }
 body {
   background: var(--bg); color: var(--ink);
@@ -582,7 +588,7 @@ header p { color: rgba(255,255,255,.88); }
     <p>Free fan tool, provided as is with no guarantees. Questions or ideas? <a href="https://github.com/gmn3e/jamboree-request-maker/issues" rel="noopener">Open an issue on GitHub</a>.</p>
     <p>No tracking or cookies. Your settings and presets stay on your device. Hosted on GitHub Pages, which keeps standard server logs (<a href="https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement" rel="noopener">GitHub privacy statement</a>).</p>
   </footer>
-  <p class="version" id="version">v6.7</p>
+  <p class="version" id="version">v6.8</p>
 </main>
 
 <div class="bar">
