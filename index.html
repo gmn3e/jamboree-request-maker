@@ -439,6 +439,59 @@ header.titlebar::before { content: ""; position: absolute; z-index: -1; right: 1
 header.titlebar h1 { color: #fff; }
 header.titlebar p { color: #e6e8ff; }
 .brand-mark { width: 50px; height: 50px; }
+
+/* ================= v7.1 type, size and alignment pass ================= */
+/* Five sizes only: 22 / 18 / 16 / 14 / 12px */
+:root { --fs-xl: 22px; --fs-lg: 18px; --fs-md: 16px; --fs-sm: 14px; --fs-xs: 12px; --control-h: 44px; }
+body { font-size: var(--fs-md); }
+
+/* Chakra Petch: title, the four steps, numbers & codes, bottom-bar actions */
+header.titlebar h1 { font-family: var(--font-display); font-weight: 700; font-size: var(--fs-xl); line-height: 1.15; }
+header.titlebar p { font-size: var(--fs-sm); }
+.card h2#h-lobby, .card h2#h-board, .card h2#h-room, .card h2#h-preview { font-family: var(--font-display); font-weight: 600; font-size: var(--fs-lg); }
+.step { font-family: var(--font-display); font-weight: 700; font-size: var(--fs-sm); width: 26px; height: 26px; }
+.btn { font-family: var(--font-display); font-weight: 700; font-size: var(--fs-lg); letter-spacing: 0; }
+.btn-primary { font-size: var(--fs-lg); }
+.stepper output { font-family: var(--font-display); font-weight: 600; font-size: var(--fs-lg); }
+.stepper button { font-size: var(--fs-lg); }
+#roomId { font-family: var(--font-display); font-weight: 600; font-size: var(--fs-lg); letter-spacing: .12em; }
+#passcode { font-family: var(--font-display); font-weight: 600; font-size: var(--fs-lg); letter-spacing: .25em; }
+
+/* IBM Plex Sans 600: everything you tap or that labels a control, plus secondary headings */
+#h-presets, #h-preset-menu, .install-title, .sheet-head h3 { font-family: var(--font-body); font-weight: 600; font-size: var(--fs-md); }
+.chip span, .pchip, .field label, .field-label, .toggle .t-name, .taken-summary { font-family: var(--font-body); font-weight: 600; font-size: var(--fs-md); }
+.btn-small, .link-btn { font-family: var(--font-body); font-weight: 600; font-size: var(--fs-sm); }
+/* IBM Plex Sans 700: only the small uppercase group labels */
+legend, .label { font-family: var(--font-body); font-weight: 700; font-size: var(--fs-xs); letter-spacing: .07em; }
+/* IBM Plex Sans 400: notes and small print */
+.hint, .ping-tip, .install-sub, .error, .install-steps, .banner span { font-family: var(--font-body); font-weight: 400; font-size: var(--fs-sm); }
+.error { font-weight: 600; }
+.chip span small { font-weight: 400; font-size: var(--fs-xs); }
+.legal p, .version { font-size: var(--fs-xs); }
+.sheet-head h3 .hint, .field label .hint { font-size: var(--fs-sm); font-weight: 400; }
+
+/* The preview looks like Discord: plain system font */
+.preview { font-family: "gg sans", "Noto Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; font-size: var(--fs-md); font-weight: 400; }
+
+/* One control height: 44px. Room ID a little taller; bottom bar bigger on purpose. */
+.chips { align-items: stretch; }
+.chip { display: flex; }
+.chip span { flex: 1 1 auto; min-height: var(--control-h); justify-content: center; }
+.pchip { min-height: var(--control-h); }
+.btn-small { min-height: var(--control-h); padding-top: 0; padding-bottom: 0; display: inline-flex; align-items: center; justify-content: center; }
+.stepper { height: var(--control-h); }
+.stepper button { width: var(--control-h); height: var(--control-h); }
+input[type="text"] { min-height: var(--control-h); padding-top: 0; padding-bottom: 0; }
+#roomId { min-height: 52px; }
+.char-summary { padding: 4px 4px 4px 12px; }
+.char-summary .btn-small { min-height: 40px; }
+.row-input { align-items: stretch; }
+.btn { min-height: 54px; }
+
+/* Footer aligned with the rest of the page */
+.legal { text-align: left; padding: 0; }
+.legal p { text-wrap: pretty; }
+.version { text-align: left; }
 </style>
 </head>
 <body>
@@ -660,7 +713,7 @@ header.titlebar p { color: #e6e8ff; }
     <p>Free fan tool, provided as is with no guarantees. Questions or ideas? <a href="https://github.com/gmn3e/jamboree-request-maker/issues" rel="noopener">Open an issue on GitHub</a>.</p>
     <p>No tracking or cookies. Your settings and presets stay on your device. Hosted on GitHub Pages, which keeps standard server logs (<a href="https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement" rel="noopener">GitHub privacy statement</a>).</p>
   </footer>
-  <p class="version" id="version">v7.0</p>
+  <p class="version" id="version">v7.1</p>
 </main>
 
 <div class="bar">
