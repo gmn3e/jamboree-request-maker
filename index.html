@@ -520,13 +520,6 @@ header p { color: rgba(255,255,255,.88); }
           <label for="chat">Voice/text channel <span class="hint">(optional)</span></label>
           <input type="text" id="chat" placeholder="#tropical-room" spellcheck="false">
         </div>
-        <fieldset>
-          <legend>Layout</legend>
-          <div class="chips">
-            <label class="chip"><input type="radio" name="style" id="sty-compact" value="compact" checked><span>Compact<small>Mall · 15 Turns · Bonus On</small></span></label>
-            <label class="chip"><input type="radio" name="style" id="sty-labels" value="labels"><span>With labels<small>Map: Mall · Turns: 15</small></span></label>
-          </div>
-        </fieldset>
       </section>
 
       <section class="card" aria-labelledby="h-preview">
@@ -554,7 +547,7 @@ header p { color: rgba(255,255,255,.88); }
         <button type="button" class="btn-small btn-accent" id="presetSaveConfirm">Save</button>
         <button type="button" class="link-btn" id="presetSaveCancel">Cancel</button>
       </div>
-      <p class="hint">Saves the board, turns, rules, chat and layout. Room ID and taken characters aren't saved. Using an existing name updates that preset.</p>
+      <p class="hint">Saves the board, turns, rules and chat. Room ID and taken characters aren't saved. Using an existing name updates that preset.</p>
       <p class="error hidden" id="presetError"></p>
     </div>
     <div class="field">
@@ -589,7 +582,7 @@ header p { color: rgba(255,255,255,.88); }
     <p>Free fan tool, provided as is with no guarantees. Questions or ideas? <a href="https://github.com/gmn3e/jamboree-request-maker/issues" rel="noopener">Open an issue on GitHub</a>.</p>
     <p>No tracking or cookies. Your settings and presets stay on your device. Hosted on GitHub Pages, which keeps standard server logs (<a href="https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement" rel="noopener">GitHub privacy statement</a>).</p>
   </footer>
-  <p class="version" id="version">v6.6</p>
+  <p class="version" id="version">v6.7</p>
 </main>
 
 <div class="bar">
@@ -656,7 +649,7 @@ header p { color: rgba(255,255,255,.88); }
   var DEFAULTS = {
     status: "looking", need: 2, taken: "", takenList: [], rules: "party", map: "mall", turns: "15",
     bonus: "on", help: false, motion: false, mg: "Vote",
-    extra: "", roomId: "", hasPass: false, passcode: "", chat: "", style: "compact"
+    extra: "", roomId: "", hasPass: false, passcode: "", chat: ""
   };
 
   var $ = function (id) { return document.getElementById(id); };
@@ -770,8 +763,7 @@ header p { color: rgba(255,255,255,.88); }
       rules: radio("rules") || "party", map: radio("map"), turns: radio("turns"),
       bonus: radio("bonus") || "on", help: $("help").checked, motion: $("motion").checked,
       mg: radio("mg"),
-      extra: $("extra").value, roomId: $("roomId").value, hasPass: $("hasPass").checked, passcode: $("passcode").value, chat: $("chat").value,
-      style: radio("style")
+      extra: $("extra").value, roomId: $("roomId").value, hasPass: $("hasPass").checked, passcode: $("passcode").value, chat: $("chat").value
     };
   }
   function apply(s) {
@@ -780,7 +772,6 @@ header p { color: rgba(255,255,255,.88); }
     setRadio("bonus", bonusMode(s.bonus)); $("help").checked = s.help; $("motion").checked = s.motion;
     setRadio("mg", s.mg);
     $("extra").value = s.extra; $("roomId").value = s.roomId; $("hasPass").checked = !!s.hasPass; $("passcode").value = s.passcode || ""; $("chat").value = s.chat;
-    setRadio("style", s.style);
   }
 
   function joinNames(text) {
@@ -816,23 +807,13 @@ header p { color: rgba(255,255,255,.88); }
     var pro = s.rules === "pro";
     var turns = pro ? "12" : s.turns;
     var help = s.help, motion = s.motion;
-    if (s.style === "labels") {
-      if (pro) lines.push("Rules: Pro");
-      lines.push("Map: " + (map.id === "any" ? "any" : map.short));
-      lines.push("Turns: " + turns);
-      if (!pro) lines.push("Bonus Stars: " + bonusText(s.bonus));
-      lines.push("Minigame Help: " + onOff(help));
-      lines.push("Motion: " + onOff(motion));
-      if (!pro) lines.push("Minigames: " + s.mg);
-    } else {
-      if (pro) lines.push("Pro Rules");
-      lines.push(map.compact);
-      lines.push(turns + " Turns");
-      if (!pro) lines.push(bonusMode(s.bonus) === "classic" ? "Classic Bonus Stars" : "Bonus " + bonusText(s.bonus));
-      lines.push("Minigame Help " + onOff(help));
-      lines.push("Motion " + onOff(motion));
-      if (!pro) lines.push("Minigame " + s.mg);
-    }
+    if (pro) lines.push("Rules: Pro");
+    lines.push("Map: " + (map.id === "any" ? "any" : map.short));
+    lines.push("Turns: " + turns);
+    if (!pro) lines.push("Bonus Stars: " + bonusText(s.bonus));
+    lines.push("Minigame Help: " + onOff(help));
+    lines.push("Motion: " + onOff(motion));
+    if (!pro) lines.push("Minigames: " + s.mg);
 
     s.extra.split("\n").map(function (x) { return x.trim(); }).filter(Boolean)
       .forEach(function (x) { lines.push(x); });
@@ -985,7 +966,7 @@ header p { color: rgba(255,255,255,.88); }
   /* ---------- Presets + share links ---------- */
   var PRESET_KEY = "jamboree-presets-v1";
   var MAX_PRESETS = 6;
-  var PRESET_FIELDS = ["rules", "map", "turns", "bonus", "help", "motion", "mg", "extra", "chat", "style"];
+  var PRESET_FIELDS = ["rules", "map", "turns", "bonus", "help", "motion", "mg", "extra", "chat"];
   var presets = [];
   try {
     var rawP = JSON.parse(localStorage.getItem(PRESET_KEY) || "[]");
@@ -1014,7 +995,6 @@ header p { color: rgba(255,255,255,.88); }
     if (TURNS.indexOf(Number(o.turns)) < 0) o.turns = DEFAULTS.turns;
     o.turns = String(o.turns);
     if (o.mg !== "Vote" && o.mg !== "Random") o.mg = DEFAULTS.mg;
-    if (o.style !== "compact" && o.style !== "labels") o.style = DEFAULTS.style;
     o.bonus = bonusMode(o.bonus);
     ["help", "motion"].forEach(function (k) { o[k] = !!o[k]; });
     o.extra = String(o.extra || "").slice(0, 300);
@@ -1120,7 +1100,6 @@ header p { color: rgba(255,255,255,.88); }
     q.set("map", c.map); q.set("turns", c.turns);
     q.set("bonus", c.bonus === "classic" ? "classic" : c.bonus === "off" ? "0" : "1"); q.set("help", c.help ? "1" : "0"); q.set("motion", c.motion ? "1" : "0");
     q.set("mg", c.mg.toLowerCase());
-    if (c.style !== "compact") q.set("style", c.style);
     if (c.chat.trim()) q.set("chat", c.chat.trim());
     if (c.extra.trim()) q.set("rules", c.extra.trim());
     return location.origin + location.pathname + "?" + q.toString();
@@ -1136,7 +1115,7 @@ header p { color: rgba(255,255,255,.88); }
         map: q.get("map"), turns: q.get("turns"),
         bonus: q.get("bonus") === "classic" ? "classic" : q.get("bonus") === "0" ? "off" : "on", help: q.get("help") === "1", motion: q.get("motion") === "1",
         mg: mg === "random" ? "Random" : "Vote",
-        style: q.get("style") || "compact", chat: q.get("chat") || "", extra: q.get("rules") || ""
+        chat: q.get("chat") || "", extra: q.get("rules") || ""
       })
     };
   }

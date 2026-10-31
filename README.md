@@ -8,12 +8,12 @@ Pick your settings, tap **Copy request**, and paste it into Discord. For example
 
 ```
 Looking for 2, Luigi & Bowser Taken
-Mall
-15 Turns
-Bonus On
-Minigame Help Off
-Motion Off
-Minigame Vote
+Map: Mall
+Turns: 15
+Bonus Stars: On
+Minigame Help: Off
+Motion: Off
+Minigames: Vote
 ID: WY9HB6
 ```
 
@@ -32,10 +32,9 @@ ID: WY9HB6
 - Bonus Stars On, Classic (Event, Coin and Minigame Stars; the host needs Player Rank 10) or Off; Minigame Help and Motion minigames on/off; minigame vote or random
 - Your own extra rules or notes, one per line
 - Room ID, an optional room passcode (switch it on only if the room has one) and an optional chat channel
-- Compact layout or "Label: value" layout
 
 **Presets and sharing**
-- **Save as preset** stores your usual setup (board, turns, rules, chat, layout). Saved presets appear at the top of the page; tap one to load it. Room ID and taken characters are never saved.
+- **Save as preset** stores your usual setup (board, turns, rules, chat). Saved presets appear at the top of the page; tap one to load it. Room ID and taken characters are never saved.
 - **Edit** at the top renames or deletes presets (delete needs a second tap). Up to 6 presets.
 - **Copy setup link** makes a link that opens the page with your settings filled in, so friends can host with the same rules and save it as their own preset.
 - **Paste a setup link** loads a link inside the page. Useful on iPhone, where the home-screen app keeps its own storage separate from Safari.
